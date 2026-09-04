@@ -1,0 +1,53 @@
+date,type,column,value,detail
+2014-05-19,null_value,cash_settlement_usd_per_ton,,Missing value in cash_settlement_usd_per_ton
+2014-05-26,null_value,cash_settlement_usd_per_ton,,Missing value in cash_settlement_usd_per_ton
+2016-12-27,null_value,cash_settlement_usd_per_ton,,Missing value in cash_settlement_usd_per_ton
+2014-05-19,null_value,copper_3_month_usd_per_ton,,Missing value in copper_3_month_usd_per_ton
+2014-05-26,null_value,copper_3_month_usd_per_ton,,Missing value in copper_3_month_usd_per_ton
+2016-12-27,null_value,copper_3_month_usd_per_ton,,Missing value in copper_3_month_usd_per_ton
+2017-05-25,null_value,copper_stock_ton,,Missing value in copper_stock_ton
+2008-10-14,large_price_change,cash_settlement_usd_per_ton,10.41542436891274,Daily price change exceeded warning threshold
+2008-10-28,large_price_change,cash_settlement_usd_per_ton,12.01844818231146,Daily price change exceeded warning threshold
+2008-10-31,large_price_change,cash_settlement_usd_per_ton,-11.162997553924836,Daily price change exceeded warning threshold
+2008-10-14,large_price_change,copper_3_month_usd_per_ton,12.195121951219523,Daily price change exceeded warning threshold
+2008-10-28,large_price_change,copper_3_month_usd_per_ton,10.272310595847944,Daily price change exceeded warning threshold
+2008-10-31,large_price_change,copper_3_month_usd_per_ton,-11.333333333333329,Daily price change exceeded warning threshold
+2018-11-02,large_stock_change,copper_stock_ton,31.97366014267422,Daily stock change exceeded warning threshold
+2020-01-21,large_stock_change,copper_stock_ton,31.153149527067825,Daily stock change exceeded warning threshold
+2020-02-26,large_stock_change,copper_stock_ton,38.17472698907955,Daily stock change exceeded warning threshold
+2020-09-28,large_stock_change,copper_stock_ton,40.0679117147708,Daily stock change exceeded warning threshold
+2020-09-29,large_stock_change,copper_stock_ton,32.193939393939395,Daily stock change exceeded warning threshold
+2008-03-25,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2008-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2009-04-14,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2009-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2010-04-06,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2010-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2011-04-26,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2011-05-03,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2011-12-28,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2012-04-10,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2012-06-06,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2013-04-02,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2014-04-22,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2014-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2015-04-07,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2015-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2016-03-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2017-04-18,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2017-12-27,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2018-04-03,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2019-04-23,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2020-04-14,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2020-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2021-04-06,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2021-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2022-04-19,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2022-06-06,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2022-12-28,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2023-04-11,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2023-12-27,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2024-04-02,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2025-04-22,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2025-12-29,calendar_gap,date,5.0,More than 4 calendar days since previous observation
+2026-04-07,calendar_gap,date,5.0,More than 4 calendar days since previous observation

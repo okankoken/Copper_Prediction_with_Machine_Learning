@@ -1,0 +1,622 @@
+========================================================================================================================
+RAW DATA PROFILE
+========================================================================================================================
+
+Files: 30
+Columns: 286
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: energy_transition/energy_transition_annual.csv
+CATEGORY: energy_transition
+ROWS: 11
+COLUMNS: 15
+DATE COLUMN: date
+DATE RANGE: 2015-12-31 -> 2025-12-31
+FREQUENCY: annual
+DUPLICATE DATES: 0.0
+
+  china_ev_sales_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=210000.0 | max=13220000.0
+  china_ev_stock_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=290000.0 | max=44250000.0
+  date | dtype=object | missing=0 (0.00%) | unique=11 | min=nan | max=nan
+  europe_ev_sales_units | dtype=int64 | missing=0 (0.00%) | unique=10 | min=160000.0 | max=4210000.0
+  europe_ev_stock_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=400000.0 | max=16880000.0
+  global_ev_sales_share_percent | dtype=float64 | missing=0 (0.00%) | unique=11 | min=0.7 | max=24.7
+  global_ev_sales_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=520000.0 | max=20880000.0
+  global_ev_stock_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=1270000.0 | max=75140000.0
+  global_renewable_capacity_mw | dtype=float64 | missing=0 (0.00%) | unique=11 | min=1852348.79 | max=5149280.09
+  global_solar_capacity_mw | dtype=float64 | missing=0 (0.00%) | unique=11 | min=226309.13 | max=2391584.49
+  global_wind_capacity_mw | dtype=float64 | missing=0 (0.00%) | unique=11 | min=416384.39 | max=1291367.86
+  rest_of_world_ev_sales_units | dtype=int64 | missing=0 (0.00%) | unique=10 | min=40000.0 | max=1940000.0
+  rest_of_world_ev_stock_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=180000.0 | max=6180000.0
+  usa_ev_sales_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=110000.0 | max=1550000.0
+  usa_ev_stock_units | dtype=int64 | missing=0 (0.00%) | unique=11 | min=400000.0 | max=7830000.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: equities/Chile_IPSA_Historical_Data.csv
+CATEGORY: equities
+ROWS: 2905
+COLUMNS: 7
+DATE COLUMN: Date
+DATE RANGE: 2015-01-02 -> 2026-08-31
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  Change % | dtype=object | missing=0 (0.00%) | unique=533 | min=nan | max=nan
+  Date | dtype=object | missing=0 (0.00%) | unique=2905 | min=nan | max=nan
+  High | dtype=object | missing=0 (0.00%) | unique=2874 | min=nan | max=nan
+  Low | dtype=object | missing=0 (0.00%) | unique=2862 | min=nan | max=nan
+  Open | dtype=object | missing=0 (0.00%) | unique=2896 | min=nan | max=nan
+  Price | dtype=object | missing=0 (0.00%) | unique=2894 | min=nan | max=nan
+  Vol. | dtype=object | missing=2613 (89.95%) | unique=245 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: equities/China_CSI300_Historical_Data.csv
+CATEGORY: equities
+ROWS: 2837
+COLUMNS: 7
+DATE COLUMN: Date
+DATE RANGE: 2015-01-05 -> 2026-09-03
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  Change % | dtype=object | missing=0 (0.00%) | unique=595 | min=nan | max=nan
+  Date | dtype=object | missing=0 (0.00%) | unique=2837 | min=nan | max=nan
+  High | dtype=object | missing=0 (0.00%) | unique=2819 | min=nan | max=nan
+  Low | dtype=object | missing=0 (0.00%) | unique=2818 | min=nan | max=nan
+  Open | dtype=object | missing=0 (0.00%) | unique=2818 | min=nan | max=nan
+  Price | dtype=object | missing=0 (0.00%) | unique=2809 | min=nan | max=nan
+  Vol. | dtype=object | missing=0 (0.00%) | unique=2625 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: equities/Poland_WIG20_Historical_Data.csv
+CATEGORY: equities
+ROWS: 2919
+COLUMNS: 7
+DATE COLUMN: Date
+DATE RANGE: 2015-01-02 -> 2026-09-03
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  Change % | dtype=object | missing=0 (0.00%) | unique=606 | min=nan | max=nan
+  Date | dtype=object | missing=0 (0.00%) | unique=2919 | min=nan | max=nan
+  High | dtype=object | missing=0 (0.00%) | unique=2875 | min=nan | max=nan
+  Low | dtype=object | missing=0 (0.00%) | unique=2885 | min=nan | max=nan
+  Open | dtype=object | missing=0 (0.00%) | unique=2878 | min=nan | max=nan
+  Price | dtype=object | missing=0 (0.00%) | unique=2872 | min=nan | max=nan
+  Vol. | dtype=object | missing=1 (0.03%) | unique=1829 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: equities/copper_company_stocks_monthly.csv
+CATEGORY: equities
+ROWS: 140
+COLUMNS: 16
+DATE COLUMN: date
+DATE RANGE: 2015-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  australia_asx200_bhp | dtype=float64 | missing=0 (0.00%) | unique=140 | min=13.790071838780454 | max=64.19333412533715
+  australia_asx200_rio_tinto | dtype=float64 | missing=0 (0.00%) | unique=140 | min=40.01157921238949 | max=181.59857177734372
+  canada_tsx_composite_capstone_copper | dtype=float64 | missing=0 (0.00%) | unique=139 | min=0.3365000024437904 | max=15.6375
+  canada_tsx_composite_first_quantum_minerals | dtype=float64 | missing=0 (0.00%) | unique=140 | min=3.4044999837875367 | max=45.12399940490722
+  canada_tsx_composite_hudbay_minerals | dtype=float64 | missing=0 (0.00%) | unique=140 | min=2.542727275328202 | max=38.835500144958495
+  canada_tsx_composite_lundin_mining | dtype=float64 | missing=0 (0.00%) | unique=140 | min=3.308500003814697 | max=38.286000442504886
+  canada_tsx_composite_teck_resources | dtype=float64 | missing=0 (0.00%) | unique=140 | min=4.765999960899353 | max=93.19750022888184
+  china_csi300_jiangxi_copper | dtype=float64 | missing=0 (0.00%) | unique=140 | min=12.792777750227186 | max=60.12749977111817
+  date | dtype=object | missing=0 (0.00%) | unique=140 | min=nan | max=nan
+  germany_dax_aurubis | dtype=float64 | missing=0 (0.00%) | unique=140 | min=36.97318163785067 | max=198.7099998474121
+  hong_kong_hang_seng_zijin_mining | dtype=float64 | missing=0 (0.00%) | unique=140 | min=1.868500000238419 | max=42.60470581054688
+  poland_wig20_kghm | dtype=float64 | missing=0 (0.00%) | unique=140 | min=55.41263138620477 | max=351.6309523809524
+  uk_ftse100_antofagasta | dtype=float64 | missing=0 (0.00%) | unique=140 | min=382.9650024414062 | max=3998.409090909091
+  uk_ftse100_glencore | dtype=float64 | missing=0 (0.00%) | unique=140 | min=80.55300025939941 | max=573.1399963378906
+  usa_sp500_freeport_mcmoran | dtype=float64 | missing=0 (0.00%) | unique=140 | min=4.698421064176057 | max=71.38285754975819
+  usa_sp500_southern_copper | dtype=float64 | missing=0 (0.00%) | unique=140 | min=22.675344567549857 | max=200.0670539855957
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: equities/country_stock_indices_monthly.csv
+CATEGORY: equities
+ROWS: 140
+COLUMNS: 18
+DATE COLUMN: date
+DATE RANGE: 2015-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  australia_asx200 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=4910.390485491072 | max=9136.48084077381
+  canada_tsx_composite | dtype=float64 | missing=0 (0.00%) | unique=140 | min=12361.010009765623 | max=36505.9349609375
+  chile_ipsa | dtype=float64 | missing=0 (0.00%) | unique=140 | min=3547.4535 | max=11233.342857142858
+  china_csi300 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=2998.3725 | max=5559.196
+  date | dtype=object | missing=0 (0.00%) | unique=140 | min=nan | max=nan
+  germany_dax | dtype=float64 | missing=0 (0.00%) | unique=140 | min=9291.378627232143 | max=26243.23344494048
+  hong_kong_hang_seng | dtype=float64 | missing=0 (0.00%) | unique=140 | min=15971.78426846591 | max=31831.893199573864
+  india_nifty50 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=7199.86669921875 | max=25997.738725142044
+  indonesia_jakarta_composite | dtype=float64 | missing=0 (0.00%) | unique=140 | min=4326.606166294643 | max=8867.4505859375
+  japan_nikkei225 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=16068.810813210228 | max=68340.45862926137
+  peru_bvl_general | dtype=float64 | missing=1 (0.71%) | unique=139 | min=9391.84 | max=57528.69
+  poland_wig20 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=1427.012380952381 | max=4004.250476190476
+  south_korea_kospi | dtype=float64 | missing=0 (0.00%) | unique=140 | min=1786.7463600852273 | max=8468.796688988095
+  turkey_bist100 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=711.8260955810547 | max=14373.581298828123
+  uk_ftse100 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=5729.350024414062 | max=10822.45
+  usa_dow_jones | dtype=float64 | missing=0 (0.00%) | unique=140 | min=16299.8984375 | max=53605.81715029762
+  usa_nasdaq_composite | dtype=float64 | missing=0 (0.00%) | unique=140 | min=4463.206030273437 | max=26388.689453125
+  usa_sp500 | dtype=float64 | missing=0 (0.00%) | unique=140 | min=1904.418493652344 | max=7711.323335193452
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/china_electricity_generation_monthly.csv
+CATEGORY: macro
+ROWS: 202
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2007-02-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_electricity_generation_100m_kwh | dtype=float64 | missing=0 (0.00%) | unique=202 | min=1967.3 | max=9362.7
+  month | dtype=object | missing=0 (0.00%) | unique=202 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  unit | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/china_fixed_asset_investment_monthly.csv
+CATEGORY: macro
+ROWS: 214
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2007-02-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_fixed_asset_investment_yoy_pct | dtype=float64 | missing=0 (0.00%) | unique=136 | min=-24.5 | max=35.0
+  month | dtype=object | missing=0 (0.00%) | unique=214 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  unit | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/china_industrial_output_monthly.csv
+CATEGORY: macro
+ROWS: 200
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2007-02-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_industrial_value_added_yoy_pct | dtype=float64 | missing=0 (0.00%) | unique=104 | min=-2.9 | max=21.3
+  month | dtype=object | missing=0 (0.00%) | unique=200 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  unit | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/china_ppi_monthly.csv
+CATEGORY: macro
+ROWS: 258
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2005-01-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_ppi_yoy_pct | dtype=float64 | missing=0 (0.00%) | unique=123 | min=-8.2 | max=13.5
+  month | dtype=object | missing=0 (0.00%) | unique=258 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  unit | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/china_real_estate_investment_monthly.csv
+CATEGORY: macro
+ROWS: 214
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2007-02-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_real_estate_investment_yoy_pct | dtype=float64 | missing=0 (0.00%) | unique=173 | min=-18.0 | max=38.3
+  month | dtype=object | missing=0 (0.00%) | unique=214 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  unit | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/fred_macro_monthly.csv
+CATEGORY: macro
+ROWS: 260
+COLUMNS: 38
+DATE COLUMN: date
+DATE RANGE: 2005-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  brent_oil_usd | dtype=float64 | missing=1 (0.38%) | unique=259 | min=26.84863636363636 | max=133.5852173913043
+  copper_fred_usd_per_ton | dtype=float64 | missing=1 (0.38%) | unique=259 | min=3105.095238095238 | max=13552.04090909091
+  date | dtype=object | missing=0 (0.00%) | unique=260 | min=nan | max=nan
+  dollar_index | dtype=float64 | missing=12 (4.62%) | unique=248 | min=86.31780499999999 | max=128.83695238095237
+  eur_usd | dtype=float64 | missing=0 (0.00%) | unique=258 | min=0.985295 | max=1.5758636363636362
+  euro_area_hicp | dtype=float64 | missing=1 (0.38%) | unique=240 | min=64.65 | max=103.22
+  fed_interest_rate | dtype=float64 | missing=0 (0.00%) | unique=114 | min=0.05 | max=5.33
+  germany_10y_bund_yield | dtype=float64 | missing=2 (0.77%) | unique=257 | min=-0.6490909091 | max=4.5604761905
+  germany_exports | dtype=float64 | missing=3 (1.15%) | unique=257 | min=77328740000.0 | max=159196500000.0
+  germany_manufacturing_order_books | dtype=float64 | missing=2 (0.77%) | unique=211 | min=-62.8 | max=29.4
+  india_10y_yield | dtype=float64 | missing=85 (32.69%) | unique=174 | min=nan | max=nan
+  india_call_money_rate | dtype=float64 | missing=2 (0.77%) | unique=36 | min=4.25 | max=10.25
+  india_industrial_production | dtype=float64 | missing=3 (1.15%) | unique=257 | min=-57.4376120115767 | max=132.389455472547
+  indonesia_call_money_rate | dtype=float64 | missing=2 (0.77%) | unique=119 | min=2.79 | max=12.75
+  indonesia_exports | dtype=float64 | missing=2 (0.77%) | unique=258 | min=6573331000.0 | max=26670210000.0
+  indonesia_reer | dtype=float64 | missing=1 (0.38%) | unique=259 | min=88.65959 | max=118.0536
+  japan_10y_yield | dtype=float64 | missing=2 (0.77%) | unique=211 | min=-0.28 | max=2.67
+  japan_manufacturing_growth | dtype=float64 | missing=3 (1.15%) | unique=250 | min=-16.4556961989 | max=7.2800808939
+  korea_10y_yield | dtype=float64 | missing=2 (0.77%) | unique=234 | min=1.254 | max=6.03
+  korea_call_money_rate | dtype=float64 | missing=2 (0.77%) | unique=148 | min=0.48 | max=5.21
+  korea_exports | dtype=float64 | missing=2 (0.77%) | unique=258 | min=20401100000.0 | max=102170000000.0
+  korea_industrial_production | dtype=float64 | missing=3 (1.15%) | unique=256 | min=-21.6409296127 | max=35.0814305608
+  m2_money_supply | dtype=float64 | missing=1 (0.38%) | unique=259 | min=6429.9 | max=23218.0
+  natural_gas_usd | dtype=float64 | missing=0 (0.00%) | unique=260 | min=1.493 | max=13.42235294117647
+  us_10y_2y_spread | dtype=float64 | missing=0 (0.00%) | unique=174 | min=-0.93 | max=2.83
+  us_10y_treasury_yield | dtype=float64 | missing=0 (0.00%) | unique=181 | min=0.62 | max=5.11
+  us_2y_yield | dtype=float64 | missing=0 (0.00%) | unique=180 | min=0.12 | max=5.12
+  us_cpi_index | dtype=float64 | missing=2 (0.77%) | unique=255 | min=190.7 | max=335.123
+  us_housing_starts | dtype=float64 | missing=1 (0.38%) | unique=234 | min=478.0 | max=2273.0
+  us_industrial_production | dtype=float64 | missing=1 (0.38%) | unique=258 | min=84.5619 | max=104.1004
+  us_ppi | dtype=float64 | missing=1 (0.38%) | unique=217 | min=150.9 | max=290.515
+  usd_cny | dtype=float64 | missing=0 (0.00%) | unique=255 | min=6.050938095238095 | max=8.2765
+  usd_gbp | dtype=float64 | missing=0 (0.00%) | unique=260 | min=1.1319714285714286 | max=2.070138095238095
+  usd_idr | dtype=float64 | missing=1 (0.38%) | unique=259 | min=8521.26086956522 | max=18007.5652173913
+  usd_inr | dtype=float64 | missing=0 (0.00%) | unique=260 | min=39.26761904761905 | max=95.85727272727271
+  usd_jpy | dtype=float64 | missing=0 (0.00%) | unique=260 | min=76.643 | max=162.32954545454547
+  usd_krw | dtype=float64 | missing=0 (0.00%) | unique=260 | min=914.9434782608696 | max=1529.4619047619049
+  vix_index | dtype=float64 | missing=0 (0.00%) | unique=259 | min=10.125454545454543 | max=62.66894736842105
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/global_leading_indicators_monthly.csv
+CATEGORY: macro
+ROWS: 138
+COLUMNS: 2
+DATE COLUMN: date
+DATE RANGE: 2015-01-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  date | dtype=object | missing=0 (0.00%) | unique=138 | min=nan | max=nan
+  g20_composite_leading_indicator | dtype=float64 | missing=0 (0.00%) | unique=138 | min=89.00198 | max=101.4313
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/global_macro_monthly.csv
+CATEGORY: macro
+ROWS: 260
+COLUMNS: 14
+DATE COLUMN: date
+DATE RANGE: 2005-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  boj_call_rate | dtype=float64 | missing=0 (0.00%) | unique=255 | min=-0.071 | max=0.9778636363636364
+  date | dtype=object | missing=0 (0.00%) | unique=260 | min=nan | max=nan
+  drc_inflation_mom | dtype=float64 | missing=86 (33.08%) | unique=157 | min=nan | max=nan
+  drc_policy_rate | dtype=float64 | missing=8 (3.08%) | unique=46 | min=2.0 | max=70.0
+  ecb_policy_rate | dtype=float64 | missing=0 (0.00%) | unique=15 | min=0.0 | max=4.0
+  euro_area_construction_output | dtype=float64 | missing=2 (0.77%) | unique=149 | min=71.1 | max=123.2
+  euro_area_copper_production_ppi | dtype=float64 | missing=2 (0.77%) | unique=206 | min=38.1 | max=145.0
+  euro_area_industrial_production | dtype=float64 | missing=2 (0.77%) | unique=131 | min=71.2 | max=105.1
+  euro_area_ppi | dtype=float64 | missing=2 (0.77%) | unique=158 | min=77.1 | max=135.9
+  indonesia_inflation_mom | dtype=float64 | missing=0 (0.00%) | unique=127 | min=-0.76 | max=8.7
+  japan_cpi | dtype=float64 | missing=1 (0.38%) | unique=98 | min=84.0 | max=102.0
+  japan_industrial_production | dtype=float64 | missing=2 (0.77%) | unique=166 | min=86.2 | max=132.0
+  japan_ppi | dtype=float64 | missing=1 (0.38%) | unique=129 | min=93.4 | max=135.8
+  usd_cdf | dtype=float64 | missing=0 (0.00%) | unique=260 | min=433.54210526315785 | max=2873.481818181818
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: macro/turkey_monthly.csv
+CATEGORY: macro
+ROWS: 140
+COLUMNS: 27
+DATE COLUMN: date
+DATE RANGE: 2015-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  date | dtype=object | missing=0 (0.00%) | unique=140 | min=nan | max=nan
+  turkey_capacity_basic_metals_percent | dtype=float64 | missing=0 (0.00%) | unique=140 | min=68.52754351 | max=82.82358715
+  turkey_capacity_electrical_equipment_percent | dtype=float64 | missing=0 (0.00%) | unique=140 | min=52.19842287 | max=83.17293845
+  turkey_capacity_fabricated_metals_percent | dtype=float64 | missing=0 (0.00%) | unique=140 | min=58.85676448 | max=76.09021624
+  turkey_capacity_intermediate_goods_percent | dtype=float64 | missing=0 (0.00%) | unique=64 | min=64.5 | max=80.6
+  turkey_capacity_investment_goods_percent | dtype=float64 | missing=0 (0.00%) | unique=90 | min=51.4 | max=84.3
+  turkey_capacity_machinery_percent | dtype=float64 | missing=0 (0.00%) | unique=140 | min=51.34885521 | max=81.26108737
+  turkey_capacity_motor_vehicles_percent | dtype=float64 | missing=0 (0.00%) | unique=140 | min=42.92906448 | max=87.73777628
+  turkey_consumer_confidence_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=63.41 | max=95.16622045
+  turkey_cpi_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=7.86779672 | max=134.75
+  turkey_domestic_ppi_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=236.61 | max=5781.74
+  turkey_eur_try_monthly_average | dtype=float64 | missing=0 (0.00%) | unique=140 | min=2.71621429 | max=55.31579524
+  turkey_exports_usd | dtype=float64 | missing=1 (0.71%) | unique=139 | min=8978637574.0 | max=26298394438.0
+  turkey_foreign_trade_balance_usd | dtype=float64 | missing=1 (0.71%) | unique=139 | min=-14290137000.0 | max=187981124.0
+  turkey_imports_usd | dtype=float64 | missing=1 (0.71%) | unique=139 | min=13393625167.0 | max=35735507208.0
+  turkey_manufacturing_capacity_utilization_percent | dtype=float64 | missing=0 (0.00%) | unique=60 | min=61.9 | max=79.5
+  turkey_ppi_basic_metals_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=282.84 | max=7849.8
+  turkey_ppi_electrical_equipment_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=213.86 | max=5441.35
+  turkey_ppi_household_appliances_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=177.28 | max=4090.09
+  turkey_ppi_metal_ores_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=522.9 | max=23730.75
+  turkey_ppi_motor_vehicles_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=165.93 | max=3633.46
+  turkey_ppi_nonferrous_metal_ores_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=645.67 | max=35163.01
+  turkey_ppi_nonferrous_metals_index | dtype=float64 | missing=0 (0.00%) | unique=140 | min=408.88 | max=20220.15
+  turkey_ppi_wire_cable_index | dtype=float64 | missing=0 (0.00%) | unique=139 | min=329.06 | max=11377.52
+  turkey_real_sector_confidence_index | dtype=float64 | missing=0 (0.00%) | unique=97 | min=62.3 | max=113.3
+  turkey_unemployment_rate_percent | dtype=float64 | missing=1 (0.71%) | unique=54 | min=7.6 | max=14.1
+  turkey_usd_try_monthly_average | dtype=float64 | missing=0 (0.00%) | unique=140 | min=2.32834286 | max=47.7388381
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/china_refined_copper_monthly.csv
+CATEGORY: market
+ROWS: 231
+COLUMNS: 4
+DATE COLUMN: month
+DATE RANGE: 2005-01-01 -> 2026-06-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  china_refined_copper_production_ton | dtype=float64 | missing=0 (0.00%) | unique=209 | min=152000.0 | max=1334000.0
+  month | dtype=object | missing=0 (0.00%) | unique=231 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  source_value_10000_ton | dtype=float64 | missing=0 (0.00%) | unique=209 | min=15.2 | max=133.4
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/lme_copper_daily.csv
+CATEGORY: market
+ROWS: 4717
+COLUMNS: 4
+DATE COLUMN: date
+DATE RANGE: 2008-01-02 -> 2026-08-26
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  cash_settlement_usd_per_ton | dtype=float64 | missing=3 (0.06%) | unique=3730 | min=2770.0 | max=14850.0
+  copper_3_month_usd_per_ton | dtype=float64 | missing=3 (0.06%) | unique=3453 | min=2820.0 | max=14336.0
+  copper_stock_ton | dtype=float64 | missing=1 (0.02%) | unique=4045 | min=51175.0 | max=678225.0
+  date | dtype=object | missing=0 (0.00%) | unique=4717 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/lme_other_metals_daily.csv
+CATEGORY: market
+ROWS: 4720
+COLUMNS: 16
+DATE COLUMN: date
+DATE RANGE: 2008-01-02 -> 2026-09-01
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  aluminum_3_month_usd_per_ton | dtype=float64 | missing=83 (1.76%) | unique=2310 | min=1288.5 | max=3968.0
+  aluminum_cash_usd_per_ton | dtype=float64 | missing=2 (0.04%) | unique=2426 | min=1253.5 | max=3984.5
+  aluminum_stock_ton | dtype=float64 | missing=2 (0.04%) | unique=4545 | min=246725.0 | max=5492325.0
+  date | dtype=object | missing=0 (0.00%) | unique=4720 | min=nan | max=nan
+  lead_3_month_usd_per_ton | dtype=float64 | missing=82 (1.74%) | unique=1596 | min=875.0 | max=3091.0
+  lead_cash_usd_per_ton | dtype=float64 | missing=2 (0.04%) | unique=1751 | min=880.0 | max=3460.0
+  lead_stock_ton | dtype=float64 | missing=1 (0.02%) | unique=3461 | min=20200.0 | max=456575.0
+  nickel_3_month_usd_per_ton | dtype=float64 | missing=96 (2.03%) | unique=2478 | min=7750.0 | max=42200.0
+  nickel_cash_usd_per_ton | dtype=float64 | missing=2 (0.04%) | unique=2652 | min=7710.0 | max=42995.0
+  nickel_stock_ton | dtype=float64 | missing=1 (0.02%) | unique=4295 | min=26.0 | max=470376.0
+  tin_3_month_usd_per_ton | dtype=float64 | missing=82 (1.74%) | unique=2164 | min=9755.0 | max=57775.0
+  tin_cash_usd_per_ton | dtype=float64 | missing=2 (0.04%) | unique=2360 | min=10000.0 | max=57525.0
+  tin_stock_ton | dtype=float64 | missing=3 (0.06%) | unique=2286 | min=645.0 | max=27905.0
+  zinc_3_month_usd_per_ton | dtype=float64 | missing=82 (1.74%) | unique=2517 | min=1069.0 | max=4460.0
+  zinc_cash_usd_per_ton | dtype=float64 | missing=2 (0.04%) | unique=2666 | min=1042.0 | max=4530.0
+  zinc_stock_ton | dtype=float64 | missing=1 (0.02%) | unique=4172 | min=15600.0 | max=1235975.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/palladium_daily.csv
+CATEGORY: market
+ROWS: 3143
+COLUMNS: 2
+DATE COLUMN: date
+DATE RANGE: 2012-07-25 -> 2026-09-02
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  date | dtype=object | missing=0 (0.00%) | unique=3143 | min=nan | max=nan
+  palladium_usd_per_troy_ounce | dtype=float64 | missing=0 (0.00%) | unique=2480 | min=461.03 | max=3282.5
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/shfe_copper_daily.csv
+CATEGORY: market
+ROWS: 2589
+COLUMNS: 12
+DATE COLUMN: date
+DATE RANGE: 2016-01-04 -> 2026-08-28
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  close_cny_per_ton | dtype=int64 | missing=0 (0.00%) | unique=1891 | min=34630.0 | max=109540.0
+  date | dtype=object | missing=0 (0.00%) | unique=2589 | min=nan | max=nan
+  delivery_month | dtype=int64 | missing=0 (0.00%) | unique=129 | min=1602.0 | max=2610.0
+  high_cny_per_ton | dtype=float64 | missing=0 (0.00%) | unique=1891 | min=35030.0 | max=114160.0
+  low_cny_per_ton | dtype=float64 | missing=0 (0.00%) | unique=1857 | min=34350.0 | max=108120.0
+  open_cny_per_ton | dtype=float64 | missing=0 (0.00%) | unique=1824 | min=34480.0 | max=110310.0
+  open_interest_change | dtype=int64 | missing=0 (0.00%) | unique=2461 | min=-52954.0 | max=67870.0
+  open_interest_lots | dtype=int64 | missing=0 (0.00%) | unique=2558 | min=77415.0 | max=362532.0
+  pre_settlement_cny_per_ton | dtype=int64 | missing=0 (0.00%) | unique=1862 | min=34750.0 | max=108990.0
+  settlement_cny_per_ton | dtype=int64 | missing=0 (0.00%) | unique=1859 | min=34750.0 | max=108990.0
+  turnover | dtype=float64 | missing=1355 (52.34%) | unique=1234 | min=nan | max=nan
+  volume_lots | dtype=int64 | missing=0 (0.00%) | unique=2570 | min=20498.0 | max=1319384.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: market/worldbank_commodities_monthly.csv
+CATEGORY: market
+ROWS: 259
+COLUMNS: 7
+DATE COLUMN: date
+DATE RANGE: 2005-01-01 -> 2026-07-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  coal_australia_usd_per_ton | dtype=float64 | missing=0 (0.00%) | unique=229 | min=38.1 | max=430.8
+  date | dtype=object | missing=0 (0.00%) | unique=259 | min=nan | max=nan
+  gold_usd_per_troy_ounce | dtype=int64 | missing=0 (0.00%) | unique=241 | min=422.0 | max=5020.0
+  iron_ore_usd_per_dmtu | dtype=float64 | missing=0 (0.00%) | unique=223 | min=40.5 | max=214.4
+  platinum_usd_per_troy_ounce | dtype=int64 | missing=0 (0.00%) | unique=223 | min=754.0 | max=2434.0
+  silver_usd_per_troy_ounce | dtype=float64 | missing=0 (0.00%) | unique=165 | min=6.6 | max=92.1
+  wti_usd_per_barrel | dtype=float64 | missing=0 (0.00%) | unique=216 | min=16.5 | max=133.9
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: mining/chile_cochilco_copper_cost_annual.csv
+CATEGORY: mining
+ROWS: 20
+COLUMNS: 15
+DATE COLUMN: None
+DATE RANGE: None -> None
+FREQUENCY: None
+DUPLICATE DATES: nan
+
+  chile_average_copper_ore_grade_pct | dtype=float64 | missing=10 (50.00%) | unique=10 | min=nan | max=nan
+  chile_concentrator_electricity_mj_per_ton | dtype=float64 | missing=0 (0.00%) | unique=20 | min=7240.738290709786 | max=13079.284699203845
+  chile_copper_electricity_consumption_tj | dtype=float64 | missing=0 (0.00%) | unique=20 | min=58830.51697987919 | max=102306.5359382
+  chile_copper_fuel_consumption_tj | dtype=float64 | missing=0 (0.00%) | unique=20 | min=42468.04841861769 | max=97145.064945
+  chile_copper_production_ton | dtype=float64 | missing=0 (0.00%) | unique=20 | min=5323217.994299999 | max=5985741.871999999
+  chile_copper_total_energy_consumption_tj | dtype=float64 | missing=0 (0.00%) | unique=20 | min=101298.56539849688 | max=199451.6008832
+  chile_mining_wage_index | dtype=float64 | missing=0 (0.00%) | unique=20 | min=77.28285410010649 | max=148.09
+  chile_mining_wage_yoy_pct | dtype=float64 | missing=3 (15.00%) | unique=17 | min=-0.0186880956830504 | max=16.827074786999052
+  chile_open_pit_fuel_mj_per_ton | dtype=float64 | missing=0 (0.00%) | unique=20 | min=4196.412609964807 | max=12349.227050919491
+  chile_sulfuric_acid_consumption_ton | dtype=float64 | missing=10 (50.00%) | unique=10 | min=nan | max=nan
+  chile_sulfuric_acid_export_ton | dtype=float64 | missing=10 (50.00%) | unique=10 | min=nan | max=nan
+  chile_sulfuric_acid_import_ton | dtype=float64 | missing=10 (50.00%) | unique=10 | min=nan | max=nan
+  chile_sulfuric_acid_production_ton | dtype=float64 | missing=10 (50.00%) | unique=10 | min=nan | max=nan
+  source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  year | dtype=int64 | missing=0 (0.00%) | unique=20 | min=2005.0 | max=2024.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: mining/icsg_copper_annual.csv
+CATEGORY: mining
+ROWS: 11
+COLUMNS: 8
+DATE COLUMN: None
+DATE RANGE: None -> None
+FREQUENCY: None
+DUPLICATE DATES: nan
+
+  icsg_mine_production_ton | dtype=float64 | missing=2 (18.18%) | unique=9 | min=20300000.0 | max=24103000.0
+  icsg_refined_balance_ton | dtype=int64 | missing=0 (0.00%) | unique=11 | min=-439000.0 | max=455000.0
+  icsg_refined_production_ton | dtype=float64 | missing=2 (18.18%) | unique=9 | min=24520000.0 | max=29613000.0
+  icsg_refined_usage_ton | dtype=float64 | missing=2 (18.18%) | unique=9 | min=24490000.0 | max=29236000.0
+  is_forecast | dtype=bool | missing=0 (0.00%) | unique=2 | min=0.0 | max=1.0
+  observation_year | dtype=int64 | missing=0 (0.00%) | unique=11 | min=2017.0 | max=2027.0
+  report_year | dtype=int64 | missing=0 (0.00%) | unique=9 | min=2017.0 | max=2026.0
+  source | dtype=object | missing=0 (0.00%) | unique=9 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: mining/peru_copper_cost_drivers_monthly.csv
+CATEGORY: mining
+ROWS: 259
+COLUMNS: 5
+DATE COLUMN: month
+DATE RANGE: 2005-01-01 -> 2026-07-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  month | dtype=object | missing=0 (0.00%) | unique=259 | min=nan | max=nan
+  peru_diesel_price_index | dtype=float64 | missing=60 (23.17%) | unique=50 | min=nan | max=nan
+  peru_formal_private_income_pen | dtype=float64 | missing=121 (46.72%) | unique=137 | min=nan | max=nan
+  peru_industrial_electricity_tariff_index | dtype=float64 | missing=60 (23.17%) | unique=58 | min=nan | max=nan
+  peru_usd_pen | dtype=float64 | missing=0 (0.00%) | unique=233 | min=2.552 | max=4.107
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: mining/peru_copper_mining_annual.csv
+CATEGORY: mining
+ROWS: 21
+COLUMNS: 7
+DATE COLUMN: None
+DATE RANGE: None -> None
+FREQUENCY: None
+DUPLICATE DATES: nan
+
+  employment_source | dtype=object | missing=15 (71.43%) | unique=1 | min=nan | max=nan
+  peru_copper_production_ton | dtype=float64 | missing=0 (0.00%) | unique=21 | min=790200.0 | max=2491800.0
+  peru_copper_production_yoy_pct | dtype=float64 | missing=1 (4.76%) | unique=20 | min=-12.6615680486605 | max=40.07089870675507
+  peru_mining_employment | dtype=float64 | missing=15 (71.43%) | unique=6 | min=nan | max=nan
+  peru_mining_employment_yoy_pct | dtype=float64 | missing=16 (76.19%) | unique=5 | min=nan | max=nan
+  production_source | dtype=object | missing=0 (0.00%) | unique=1 | min=nan | max=nan
+  year | dtype=int64 | missing=0 (0.00%) | unique=21 | min=2005.0 | max=2025.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: mining/usgs_copper_annual.csv
+CATEGORY: mining
+ROWS: 10
+COLUMNS: 7
+DATE COLUMN: None
+DATE RANGE: None -> None
+FREQUENCY: None
+DUPLICATE DATES: nan
+
+  is_estimate | dtype=bool | missing=0 (0.00%) | unique=2 | min=0.0 | max=1.0
+  observation_year | dtype=int64 | missing=0 (0.00%) | unique=10 | min=2016.0 | max=2025.0
+  report_year | dtype=int64 | missing=0 (0.00%) | unique=9 | min=2018.0 | max=2026.0
+  source | dtype=object | missing=0 (0.00%) | unique=9 | min=nan | max=nan
+  world_copper_mine_production_ton | dtype=float64 | missing=0 (0.00%) | unique=8 | min=20000000.0 | max=23000000.0
+  world_copper_refinery_production_ton | dtype=float64 | missing=2 (20.00%) | unique=7 | min=24400000.0 | max=29000000.0
+  world_copper_reserves_ton | dtype=float64 | missing=2 (20.00%) | unique=6 | min=790000000.0 | max=1000000000.0
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: risk/economic_policy_uncertainty_monthly.csv
+CATEGORY: risk
+ROWS: 355
+COLUMNS: 3
+DATE COLUMN: date
+DATE RANGE: 1997-01-01 -> 2026-07-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  date | dtype=object | missing=0 (0.00%) | unique=355 | min=nan | max=nan
+  global_economic_policy_uncertainty_index | dtype=float64 | missing=0 (0.00%) | unique=355 | min=47.58942470064732 | max=620.8833819301921
+  global_economic_policy_uncertainty_ppp_index | dtype=float64 | missing=0 (0.00%) | unique=355 | min=51.23305637144932 | max=575.2545348383933
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: risk/geopolitical_risk_monthly.csv
+CATEGORY: risk
+ROWS: 500
+COLUMNS: 4
+DATE COLUMN: date
+DATE RANGE: 1985-01-01 -> 2026-08-01
+FREQUENCY: monthly
+DUPLICATE DATES: 0.0
+
+  date | dtype=object | missing=0 (0.00%) | unique=500 | min=nan | max=nan
+  geopolitical_acts_index | dtype=float64 | missing=0 (0.00%) | unique=500 | min=28.454627990722656 | max=854.074951171875
+  geopolitical_risk_index | dtype=float64 | missing=0 (0.00%) | unique=500 | min=39.04562377929688 | max=512.5297241210938
+  geopolitical_threats_index | dtype=float64 | missing=0 (0.00%) | unique=500 | min=36.68563461303711 | max=403.713623046875
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: shipping/baltic_dry_index_daily.csv
+CATEGORY: shipping
+ROWS: 2904
+COLUMNS: 2
+DATE COLUMN: date
+DATE RANGE: 2015-01-02 -> 2026-09-01
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  baltic_dry_index | dtype=float64 | missing=0 (0.00%) | unique=1714 | min=290.0 | max=5650.0
+  date | dtype=object | missing=0 (0.00%) | unique=2904 | min=nan | max=nan
+
+------------------------------------------------------------------------------------------------------------------------
+FILE: shipping/portwatch_shipping_activity_daily.csv
+CATEGORY: shipping
+ROWS: 2797
+COLUMNS: 19
+DATE COLUMN: date
+DATE RANGE: 2019-01-01 -> 2026-08-28
+FREQUENCY: daily
+DUPLICATE DATES: 0.0
+
+  china_copper_related_dry_bulk_export | dtype=int64 | missing=0 (0.00%) | unique=2796 | min=22601.0 | max=2386789.0
+  china_copper_related_dry_bulk_import | dtype=int64 | missing=0 (0.00%) | unique=2796 | min=273557.0 | max=3642908.0
+  china_copper_related_dry_bulk_portcalls | dtype=int64 | missing=0 (0.00%) | unique=93 | min=9.0 | max=120.0
+  china_copper_related_portcalls | dtype=int64 | missing=0 (0.00%) | unique=239 | min=37.0 | max=381.0
+  copper_supply_dry_bulk_export | dtype=int64 | missing=0 (0.00%) | unique=2412 | min=0.0 | max=445027.0
+  copper_supply_dry_bulk_import | dtype=int64 | missing=0 (0.00%) | unique=2115 | min=0.0 | max=273656.0
+  copper_supply_dry_bulk_portcalls | dtype=int64 | missing=0 (0.00%) | unique=14 | min=0.0 | max=13.0
+  copper_supply_portcalls | dtype=int64 | missing=0 (0.00%) | unique=25 | min=3.0 | max=29.0
+  date | dtype=object | missing=0 (0.00%) | unique=2797 | min=nan | max=nan
+  global_cargo_portcalls | dtype=int64 | missing=0 (0.00%) | unique=929 | min=1689.0 | max=4346.0
+  global_container_export | dtype=int64 | missing=0 (0.00%) | unique=2797 | min=3848915.0 | max=11808315.0
+  global_container_import | dtype=int64 | missing=0 (0.00%) | unique=2796 | min=5241570.0 | max=13801448.0
+  global_container_portcalls | dtype=int64 | missing=0 (0.00%) | unique=409 | min=640.0 | max=1534.0
+  global_dry_bulk_export | dtype=int64 | missing=0 (0.00%) | unique=2797 | min=7430449.0 | max=17259310.0
+  global_dry_bulk_import | dtype=int64 | missing=0 (0.00%) | unique=2797 | min=7179863.0 | max=24897439.0
+  global_dry_bulk_portcalls | dtype=int64 | missing=0 (0.00%) | unique=310 | min=453.0 | max=1115.0
+  global_export | dtype=int64 | missing=0 (0.00%) | unique=2796 | min=18577106.0 | max=41934213.0
+  global_import | dtype=int64 | missing=0 (0.00%) | unique=2797 | min=17941521.0 | max=49714747.0
+  global_portcalls | dtype=int64 | missing=0 (0.00%) | unique=1200 | min=2453.0 | max=6338.0

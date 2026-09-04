@@ -1,0 +1,10 @@
+metric,value
+total_model_features,1366
+pass_features,1352
+warning_features,14
+fail_features,0
+all_null_features,0
+constant_features,0
+high_missing_features,14
+low_observation_features,1
+exact_duplicate_pairs,0

@@ -1,0 +1,32 @@
+project_name: Copper_Prediction_with_Machine_Learning
+
+target: copper_usd_per_ton
+
+forecast_frequency: monthly
+forecast_horizon_months: 12
+
+training_windows:
+  - 5
+  - 8
+  - 10
+
+models:
+  - naive
+  - sarimax
+  - lightgbm
+  - xgboost
+
+metrics:
+  - mae
+  - rmse
+  - mape
+  - smape
+  - bias
+  - directional_accuracy
+
+data_quality:
+  max_missing_ratio: 0.10
+  target_max_lag_months: 1
+
+mlflow:
+  experiment_name: Copper_Prediction_with_Machine_Learning

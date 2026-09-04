@@ -1,0 +1,17 @@
+check_name,status,value,message
+row_count,INFO,10,Total USGS annual rows
+first_observation_year,INFO,2016,First observation year
+last_observation_year,INFO,2025,Last observation year
+duplicate_observation_years,PASS,0,Observation year must be unique
+missing_observation_years,PASS,0,Missing years: None
+null_world_copper_mine_production_ton,PASS,0,Null count for world_copper_mine_production_ton
+null_world_copper_refinery_production_ton,WARNING,2,Null count for world_copper_refinery_production_ton
+null_world_copper_reserves_ton,WARNING,2,Null count for world_copper_reserves_ton
+nonpositive_world_copper_mine_production_ton,PASS,0,Non-positive values for world_copper_mine_production_ton
+nonpositive_world_copper_refinery_production_ton,PASS,0,Non-positive values for world_copper_refinery_production_ton
+nonpositive_world_copper_reserves_ton,PASS,0,Non-positive values for world_copper_reserves_ton
+report_year_logic,PASS,0,Report year must not be earlier than observation year
+estimate_rows,PASS,1,Latest observation may be estimate; multiple estimate rows should be reviewed
+large_change_world_copper_mine_production_ton,PASS,0,Annual absolute change above 20 percent for world_copper_mine_production_ton
+large_change_world_copper_refinery_production_ton,PASS,0,Annual absolute change above 20 percent for world_copper_refinery_production_ton
+large_change_world_copper_reserves_ton,PASS,0,Annual absolute change above 20 percent for world_copper_reserves_ton

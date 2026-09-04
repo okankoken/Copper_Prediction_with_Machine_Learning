@@ -1,0 +1,35 @@
+check_name,status,value,message
+row_count,INFO,20,Total annual rows
+first_year,INFO,2005,First observation year
+last_year,INFO,2024,Last observation year
+duplicate_years,PASS,0,Year must be unique
+missing_years,PASS,0,Missing years: None
+null_chile_copper_production_ton,PASS,0,Null count for chile_copper_production_ton
+null_chile_mining_wage_index,PASS,0,Null count for chile_mining_wage_index
+null_chile_mining_wage_yoy_pct,WARNING,3,Null count for chile_mining_wage_yoy_pct
+null_chile_copper_fuel_consumption_tj,PASS,0,Null count for chile_copper_fuel_consumption_tj
+null_chile_copper_electricity_consumption_tj,PASS,0,Null count for chile_copper_electricity_consumption_tj
+null_chile_copper_total_energy_consumption_tj,PASS,0,Null count for chile_copper_total_energy_consumption_tj
+null_chile_open_pit_fuel_mj_per_ton,PASS,0,Null count for chile_open_pit_fuel_mj_per_ton
+null_chile_concentrator_electricity_mj_per_ton,PASS,0,Null count for chile_concentrator_electricity_mj_per_ton
+null_chile_sulfuric_acid_consumption_ton,WARNING,10,Null count for chile_sulfuric_acid_consumption_ton
+null_chile_sulfuric_acid_production_ton,WARNING,10,Null count for chile_sulfuric_acid_production_ton
+null_chile_sulfuric_acid_import_ton,WARNING,10,Null count for chile_sulfuric_acid_import_ton
+null_chile_sulfuric_acid_export_ton,WARNING,10,Null count for chile_sulfuric_acid_export_ton
+null_chile_average_copper_ore_grade_pct,WARNING,10,Null count for chile_average_copper_ore_grade_pct
+nonpositive_chile_copper_production_ton,PASS,0,Non-positive values for chile_copper_production_ton
+nonpositive_chile_mining_wage_index,PASS,0,Non-positive values for chile_mining_wage_index
+nonpositive_chile_copper_fuel_consumption_tj,PASS,0,Non-positive values for chile_copper_fuel_consumption_tj
+nonpositive_chile_copper_electricity_consumption_tj,PASS,0,Non-positive values for chile_copper_electricity_consumption_tj
+nonpositive_chile_copper_total_energy_consumption_tj,PASS,0,Non-positive values for chile_copper_total_energy_consumption_tj
+nonpositive_chile_open_pit_fuel_mj_per_ton,PASS,0,Non-positive values for chile_open_pit_fuel_mj_per_ton
+nonpositive_chile_concentrator_electricity_mj_per_ton,PASS,0,Non-positive values for chile_concentrator_electricity_mj_per_ton
+energy_balance_check,PASS,0,Fuel + electricity should equal total energy within tolerance
+sulfuric_acid_balance_check,PASS,0,Production + imports - exports should approximate consumption
+ore_grade_range_check,PASS,0,Copper ore grade must be greater than 0 and below 5 percent
+wage_yoy_change_check,PASS,0,Absolute mining wage YoY change above 30 percent
+large_change_chile_copper_production_ton,PASS,0,Annual absolute change above 30 percent for chile_copper_production_ton
+large_change_chile_copper_fuel_consumption_tj,PASS,0,Annual absolute change above 30 percent for chile_copper_fuel_consumption_tj
+large_change_chile_copper_electricity_consumption_tj,PASS,0,Annual absolute change above 30 percent for chile_copper_electricity_consumption_tj
+large_change_chile_open_pit_fuel_mj_per_ton,PASS,0,Annual absolute change above 30 percent for chile_open_pit_fuel_mj_per_ton
+large_change_chile_concentrator_electricity_mj_per_ton,PASS,0,Annual absolute change above 30 percent for chile_concentrator_electricity_mj_per_ton

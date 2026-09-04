@@ -1,0 +1,17 @@
+check,status,value,detail
+row_count,PASS,140,Total monthly rows
+column_count,PASS,211,Total columns including date
+duplicate_dates,PASS,0,Duplicate monthly dates
+duplicate_columns,PASS,0,Duplicate column names
+date_order,PASS,True,Dates must be sorted ascending
+missing_calendar_months,PASS,0,No missing months
+last_full_month,PASS,2026-08-31,Expected last full month: 2026-08-31
+target_exists,PASS,1,cash_settlement_usd_per_ton
+target_missing,PASS,0,Target missing values
+plan_missing_features,PASS,0,None
+plan_extra_features,PASS,0,None
+forbidden_columns,PASS,0,None
+infinite_values,PASS,0,Positive or negative infinity values
+all_null_columns,PASS,0,None
+constant_columns,PASS,0,None
+annual_within_year_consistency,PASS,0,All annual values are constant within year

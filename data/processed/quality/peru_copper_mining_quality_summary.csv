@@ -1,0 +1,14 @@
+check_name,status,value,message
+row_count,INFO,21,Total annual rows
+first_year,INFO,2005,First observation year
+last_year,INFO,2025,Last observation year
+duplicate_years,PASS,0,Year must be unique
+missing_years,PASS,0,Missing years: None
+null_production,PASS,0,Copper production null count
+production_positive,PASS,0,Copper production must be positive
+employment_observations,INFO,6,Available complete employment years
+null_employment,WARNING,15,Employment starts in 2020 in current MINEM source
+employment_positive,PASS,0,Mining employment must be positive
+production_yoy_consistency,PASS,0,Stored production YoY must match production
+large_production_yoy,WARNING,1,Absolute annual production change above 30 percent
+employment_yoy_consistency,PASS,0,Stored employment YoY must match employment

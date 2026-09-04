@@ -1,0 +1,19 @@
+check_name,status,value,message
+row_count,INFO,11,Total ICSG annual rows
+first_observation_year,INFO,2017,First observation year
+last_observation_year,INFO,2027,Last observation year
+duplicate_observation_years,PASS,0,Observation year must be unique
+missing_observation_years,PASS,0,Missing years: None
+null_icsg_mine_production_ton,WARNING,2,Null count for icsg_mine_production_ton
+null_icsg_refined_production_ton,WARNING,2,Null count for icsg_refined_production_ton
+null_icsg_refined_usage_ton,WARNING,2,Null count for icsg_refined_usage_ton
+null_icsg_refined_balance_ton,PASS,0,Null count for icsg_refined_balance_ton
+nonpositive_icsg_mine_production_ton,PASS,0,Non-positive values for icsg_mine_production_ton
+nonpositive_icsg_refined_production_ton,PASS,0,Non-positive values for icsg_refined_production_ton
+nonpositive_icsg_refined_usage_ton,PASS,0,Non-positive values for icsg_refined_usage_ton
+balance_sign_check,PASS,0,Negative balance values are valid and represent market deficit
+forecast_rows,INFO,6,Number of forecast observations
+forecast_year_logic,PASS,0,Forecast observation year must not be earlier than report year
+large_change_icsg_mine_production_ton,PASS,0,Annual absolute change above 20 percent for icsg_mine_production_ton
+large_change_icsg_refined_production_ton,PASS,0,Annual absolute change above 20 percent for icsg_refined_production_ton
+large_change_icsg_refined_usage_ton,PASS,0,Annual absolute change above 20 percent for icsg_refined_usage_ton

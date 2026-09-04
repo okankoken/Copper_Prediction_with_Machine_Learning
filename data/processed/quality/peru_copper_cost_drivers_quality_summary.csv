@@ -1,0 +1,20 @@
+check_name,status,value,message
+row_count,INFO,259,Total monthly rows
+invalid_month_format,PASS,0,Month must use YYYY-MM format
+first_month,INFO,2005-01,First observation month
+last_month,INFO,2026-07,Last observation month
+duplicate_months,PASS,0,Month must be unique
+missing_months,PASS,0,Missing months: None
+null_peru_usd_pen,PASS,0,Null count for peru_usd_pen
+null_peru_diesel_price_index,WARNING,60,Null count for peru_diesel_price_index
+null_peru_industrial_electricity_tariff_index,WARNING,60,Null count for peru_industrial_electricity_tariff_index
+null_peru_formal_private_income_pen,WARNING,121,Null count for peru_formal_private_income_pen
+nonpositive_peru_usd_pen,PASS,0,Non-positive values for peru_usd_pen
+nonpositive_peru_diesel_price_index,PASS,0,Non-positive values for peru_diesel_price_index
+nonpositive_peru_industrial_electricity_tariff_index,PASS,0,Non-positive values for peru_industrial_electricity_tariff_index
+nonpositive_peru_formal_private_income_pen,PASS,0,Non-positive values for peru_formal_private_income_pen
+large_monthly_change_peru_usd_pen,PASS,0,Monthly absolute change above 15 percent for peru_usd_pen
+large_monthly_change_peru_diesel_price_index,WARNING,1,Monthly absolute change above 25 percent for peru_diesel_price_index
+large_monthly_change_peru_industrial_electricity_tariff_index,PASS,0,Monthly absolute change above 20 percent for peru_industrial_electricity_tariff_index
+large_monthly_change_peru_formal_private_income_pen,WARNING,45,Monthly absolute change above 40 percent for peru_formal_private_income_pen
+latest_month_missing_values,WARNING,1,Missing values in latest available month

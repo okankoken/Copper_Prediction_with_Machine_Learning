@@ -1,0 +1,87 @@
+check,status,value,detail
+row_count,INFO,260,Total number of monthly observations
+first_month,INFO,2005-01,First available FRED month
+last_month,INFO,2026-08,Latest row in FRED dataset
+invalid_dates,PASS,0,Dates that could not be parsed
+duplicate_months,PASS,0,Duplicate monthly observations
+missing_calendar_months,PASS,0,Entire months missing from dataset
+null_fed_interest_rate,PASS,0,Missing values in fed_interest_rate
+latest_fed_interest_rate,INFO,2026-08,Latest available month for fed_interest_rate
+null_us_cpi_index,WARNING,2,Missing values in us_cpi_index
+latest_us_cpi_index,INFO,2026-07,Latest available month for us_cpi_index
+null_us_industrial_production,WARNING,1,Missing values in us_industrial_production
+latest_us_industrial_production,INFO,2026-07,Latest available month for us_industrial_production
+null_us_10y_treasury_yield,PASS,0,Missing values in us_10y_treasury_yield
+latest_us_10y_treasury_yield,INFO,2026-08,Latest available month for us_10y_treasury_yield
+null_us_2y_yield,PASS,0,Missing values in us_2y_yield
+latest_us_2y_yield,INFO,2026-08,Latest available month for us_2y_yield
+null_us_10y_2y_spread,PASS,0,Missing values in us_10y_2y_spread
+latest_us_10y_2y_spread,INFO,2026-08,Latest available month for us_10y_2y_spread
+null_us_housing_starts,WARNING,1,Missing values in us_housing_starts
+latest_us_housing_starts,INFO,2026-07,Latest available month for us_housing_starts
+null_us_ppi,WARNING,1,Missing values in us_ppi
+latest_us_ppi,INFO,2026-07,Latest available month for us_ppi
+null_m2_money_supply,WARNING,1,Missing values in m2_money_supply
+latest_m2_money_supply,INFO,2026-07,Latest available month for m2_money_supply
+null_brent_oil_usd,WARNING,1,Missing values in brent_oil_usd
+latest_brent_oil_usd,INFO,2026-07,Latest available month for brent_oil_usd
+null_natural_gas_usd,PASS,0,Missing values in natural_gas_usd
+latest_natural_gas_usd,INFO,2026-08,Latest available month for natural_gas_usd
+null_copper_fred_usd_per_ton,WARNING,1,Missing values in copper_fred_usd_per_ton
+latest_copper_fred_usd_per_ton,INFO,2026-07,Latest available month for copper_fred_usd_per_ton
+null_eur_usd,PASS,0,Missing values in eur_usd
+latest_eur_usd,INFO,2026-08,Latest available month for eur_usd
+null_usd_cny,PASS,0,Missing values in usd_cny
+latest_usd_cny,INFO,2026-08,Latest available month for usd_cny
+null_usd_jpy,PASS,0,Missing values in usd_jpy
+latest_usd_jpy,INFO,2026-08,Latest available month for usd_jpy
+null_usd_gbp,PASS,0,Missing values in usd_gbp
+latest_usd_gbp,INFO,2026-08,Latest available month for usd_gbp
+null_usd_inr,PASS,0,Missing values in usd_inr
+latest_usd_inr,INFO,2026-08,Latest available month for usd_inr
+null_usd_krw,PASS,0,Missing values in usd_krw
+latest_usd_krw,INFO,2026-08,Latest available month for usd_krw
+null_dollar_index,WARNING,12,Missing values in dollar_index
+latest_dollar_index,INFO,2026-08,Latest available month for dollar_index
+null_vix_index,PASS,0,Missing values in vix_index
+latest_vix_index,INFO,2026-08,Latest available month for vix_index
+null_euro_area_hicp,WARNING,1,Missing values in euro_area_hicp
+latest_euro_area_hicp,INFO,2026-07,Latest available month for euro_area_hicp
+null_germany_10y_bund_yield,WARNING,2,Missing values in germany_10y_bund_yield
+latest_germany_10y_bund_yield,INFO,2026-06,Latest available month for germany_10y_bund_yield
+null_japan_10y_yield,WARNING,2,Missing values in japan_10y_yield
+latest_japan_10y_yield,INFO,2026-06,Latest available month for japan_10y_yield
+null_japan_manufacturing_growth,WARNING,3,Missing values in japan_manufacturing_growth
+latest_japan_manufacturing_growth,INFO,2026-05,Latest available month for japan_manufacturing_growth
+null_india_10y_yield,WARNING,85,Missing values in india_10y_yield
+latest_india_10y_yield,INFO,2026-06,Latest available month for india_10y_yield
+null_india_call_money_rate,WARNING,2,Missing values in india_call_money_rate
+latest_india_call_money_rate,INFO,2026-06,Latest available month for india_call_money_rate
+null_india_industrial_production,WARNING,3,Missing values in india_industrial_production
+latest_india_industrial_production,INFO,2026-05,Latest available month for india_industrial_production
+null_korea_10y_yield,WARNING,2,Missing values in korea_10y_yield
+latest_korea_10y_yield,INFO,2026-06,Latest available month for korea_10y_yield
+null_korea_exports,WARNING,2,Missing values in korea_exports
+latest_korea_exports,INFO,2026-06,Latest available month for korea_exports
+null_korea_industrial_production,WARNING,3,Missing values in korea_industrial_production
+latest_korea_industrial_production,INFO,2026-05,Latest available month for korea_industrial_production
+null_korea_call_money_rate,WARNING,2,Missing values in korea_call_money_rate
+latest_korea_call_money_rate,INFO,2026-06,Latest available month for korea_call_money_rate
+null_germany_exports,WARNING,3,Missing values in germany_exports
+latest_germany_exports,INFO,2026-05,Latest available month for germany_exports
+null_germany_manufacturing_order_books,WARNING,2,Missing values in germany_manufacturing_order_books
+latest_germany_manufacturing_order_books,INFO,2026-06,Latest available month for germany_manufacturing_order_books
+null_indonesia_exports,WARNING,2,Missing values in indonesia_exports
+latest_indonesia_exports,INFO,2026-06,Latest available month for indonesia_exports
+null_indonesia_call_money_rate,WARNING,2,Missing values in indonesia_call_money_rate
+latest_indonesia_call_money_rate,INFO,2026-06,Latest available month for indonesia_call_money_rate
+null_usd_idr,WARNING,1,Missing values in usd_idr
+latest_usd_idr,INFO,2026-07,Latest available month for usd_idr
+null_indonesia_reer,WARNING,1,Missing values in indonesia_reer
+latest_indonesia_reer,INFO,2026-07,Latest available month for indonesia_reer
+negative_us_cpi_index,PASS,0,Negative values found in us_cpi_index
+negative_us_industrial_production,PASS,0,Negative values found in us_industrial_production
+negative_us_10y_treasury_yield,PASS,0,Negative values found in us_10y_treasury_yield
+negative_m2_money_supply,PASS,0,Negative values found in m2_money_supply
+negative_brent_oil_usd,PASS,0,Negative values found in brent_oil_usd
+negative_copper_fred_usd_per_ton,PASS,0,Negative values found in copper_fred_usd_per_ton

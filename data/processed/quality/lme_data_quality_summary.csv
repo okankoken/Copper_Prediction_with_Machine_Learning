@@ -1,0 +1,19 @@
+check,status,value,detail
+row_count,INFO,4717,Total number of daily observations
+first_date,INFO,2008-01-02,First available LME observation
+last_date,INFO,2026-08-26,Latest available LME observation
+invalid_dates,PASS,0,Dates that could not be parsed
+duplicate_dates,PASS,0,Duplicate daily dates
+null_cash_settlement_usd_per_ton,WARNING,3,Missing values in cash_settlement_usd_per_ton
+null_copper_3_month_usd_per_ton,WARNING,3,Missing values in copper_3_month_usd_per_ton
+null_copper_stock_ton,WARNING,1,Missing values in copper_stock_ton
+non_positive_cash_settlement_usd_per_ton,PASS,0,Price must be greater than zero
+non_positive_copper_3_month_usd_per_ton,PASS,0,Price must be greater than zero
+negative_stock,PASS,0,LME stock cannot be negative
+data_freshness_days,PASS,1,Calendar days between today and latest LME observation
+large_change_cash_settlement_usd_per_ton,WARNING,3,Daily absolute change above 10.0%
+large_change_copper_3_month_usd_per_ton,WARNING,3,Daily absolute change above 10.0%
+large_stock_change,WARNING,5,Daily stock change above 30.0%
+extreme_cash_3m_spread,PASS,0,Absolute Cash-3M spread exceeds 15% of cash price
+calendar_gaps_over_4_days,INFO,34,Calendar gaps may include weekends and LME market holidays.
+low_observation_months,PASS,0,Completed months with fewer than 15 observations

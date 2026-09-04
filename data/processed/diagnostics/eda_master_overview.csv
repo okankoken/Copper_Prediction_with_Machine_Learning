@@ -1,0 +1,11 @@
+metric,value
+row_count,140
+column_count,212
+feature_count,211
+numeric_feature_count,211
+first_month,2015-01-31 00:00:00
+last_month,2026-08-31 00:00:00
+target_mean,7696.181887110611
+target_std,2241.931209347115
+target_min,4462.75
+target_max,14335.722222222224

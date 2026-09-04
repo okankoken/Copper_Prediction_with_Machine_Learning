@@ -1,0 +1,7 @@
+observation_year,icsg_mine_production_ton,icsg_refined_production_ton,icsg_refined_usage_ton,icsg_refined_balance_ton,is_forecast,report_year,source,issue
+2017,,,,-150000,True,2017,ICSG_2017_10_FORECAST,null_icsg_mine_production_ton
+2019,,24780000.0,24969000.0,-190000,True,2019,ICSG_2019_05_FORECAST,null_icsg_mine_production_ton
+2017,,,,-150000,True,2017,ICSG_2017_10_FORECAST,null_icsg_refined_production_ton
+2018,20300000.0,,,40000,True,2018,ICSG_2018_04_FORECAST,null_icsg_refined_production_ton
+2017,,,,-150000,True,2017,ICSG_2017_10_FORECAST,null_icsg_refined_usage_ton
+2018,20300000.0,,,40000,True,2018,ICSG_2018_04_FORECAST,null_icsg_refined_usage_ton

@@ -1,0 +1,82 @@
+country,role,variable_group,variable_name,priority,target_frequency,preferred_source,fallback_source,status,model_use,notes
+USA,consumer_financial,fx,usd_index,high,monthly,FRED,,existing,global_financial,Trade weighted USD
+USA,consumer_financial,interest_rate,fed_policy_rate,high,monthly,FRED,,existing,global_financial,Federal funds rate
+USA,consumer_financial,bond_yield,us_10y_yield,high,monthly,FRED,,existing,global_financial,US 10Y Treasury
+USA,consumer_financial,bond_yield,us_2y_yield,high,monthly,FRED,,to_add,global_financial,Short term market expectations
+USA,consumer_financial,yield_curve,us_10y_2y_spread,high,monthly,FRED,,to_add,global_financial,Derived from 10Y minus 2Y
+USA,consumer_financial,inflation,us_cpi,high,monthly,FRED,,existing,demand_macro,CPI
+USA,consumer_financial,inflation,us_ppi,medium,monthly,FRED,,to_add,input_cost,Producer prices
+USA,consumer_financial,industrial_activity,us_industrial_production,high,monthly,FRED,,existing,demand_macro,Industrial production
+USA,consumer_financial,housing,us_housing_starts,high,monthly,FRED,,to_add,copper_demand,Construction and wiring demand
+USA,consumer_financial,money_supply,us_m2,medium,monthly,FRED,,existing,global_liquidity,M2
+USA,consumer_financial,financial_risk,vix,high,monthly,FRED,,existing,risk,VIX
+
+CHINA,consumer_refiner,fx,usd_cny,high,monthly,FRED,,existing,global_financial,USD CNY
+CHINA,consumer_refiner,inflation,china_cpi,medium,monthly,NBS,China Data Portal,to_add,demand_macro,Consumer inflation
+CHINA,consumer_refiner,inflation,china_ppi,high,monthly,NBS,China Data Portal,existing,input_cost,Producer inflation
+CHINA,consumer_refiner,industrial_activity,china_industrial_output,high,monthly,NBS,China Data Portal,existing,copper_demand,Industrial value added
+CHINA,consumer_refiner,investment,china_fixed_asset_investment,high,monthly,NBS,China Data Portal,existing,copper_demand,Infrastructure and investment
+CHINA,consumer_refiner,real_estate,china_real_estate_investment,high,monthly,NBS,China Data Portal,existing,copper_demand,Property sector
+CHINA,consumer_refiner,electricity,china_electricity_generation,medium,monthly,NBS,China Data Portal,existing,industrial_activity,General activity proxy
+CHINA,consumer_refiner,copper_supply,china_refined_copper_production,high,monthly,NBS,China Data Portal,existing,copper_supply,Refined production
+CHINA,consumer_refiner,credit,china_total_social_financing,high,monthly,PBOC,,to_add,liquidity_demand,Credit impulse candidate
+CHINA,consumer_refiner,credit,china_new_loans,medium,monthly,PBOC,,to_add,liquidity_demand,Domestic credit conditions
+
+EURO_AREA,consumer,fx,eur_usd,high,monthly,FRED,,existing,global_financial,EUR USD
+EURO_AREA,consumer,inflation,euro_area_hicp,high,monthly,Eurostat,FRED,to_add,demand_macro,HICP
+EURO_AREA,consumer,inflation,euro_area_ppi,high,monthly,Eurostat,,to_add,input_cost,Industrial producer prices
+EURO_AREA,consumer,interest_rate,ecb_policy_rate,high,monthly,ECB,,to_add,global_financial,ECB key policy rate
+EURO_AREA,consumer,industrial_activity,euro_area_industrial_production,high,monthly,Eurostat,,to_add,copper_demand,Industry excluding construction
+EURO_AREA,consumer,construction,euro_area_construction_output,medium,monthly,Eurostat,,to_add,copper_demand,Construction cycle
+
+GERMANY,consumer_industrial,bond_yield,germany_10y_bund_yield,high,monthly,FRED,Bundesbank,to_add,global_financial,German benchmark government bond
+GERMANY,consumer_industrial,industrial_activity,germany_industrial_production,high,monthly,Destatis,Eurostat,to_add,copper_demand,Manufacturing cycle
+GERMANY,consumer_industrial,orders,germany_manufacturing_orders,high,monthly,Destatis,Eurostat,to_add,leading_demand,Forward-looking manufacturing signal
+
+JAPAN,consumer_industrial,fx,usd_jpy,high,monthly,FRED,,existing,global_financial,USD JPY
+JAPAN,consumer_industrial,inflation,japan_cpi,medium,monthly,Statistics Bureau Japan,FRED,to_add,demand_macro,CPI
+JAPAN,consumer_industrial,inflation,japan_ppi,high,monthly,BOJ,,to_add,input_cost,Corporate Goods Price Index
+JAPAN,consumer_industrial,interest_rate,boj_policy_rate,high,monthly,BOJ,,to_add,global_financial,BOJ policy conditions
+JAPAN,consumer_industrial,bond_yield,japan_10y_yield,high,monthly,BOJ,FRED,to_add,global_financial,Potential cross-market signal
+JAPAN,consumer_industrial,industrial_activity,japan_industrial_production,high,monthly,METI,FRED,to_add,copper_demand,Manufacturing activity
+
+INDIA,consumer_growth,fx,usd_inr,high,monthly,RBI,FRED,to_add,global_financial,USD INR
+INDIA,consumer_growth,inflation,india_cpi,medium,monthly,MOSPI,FRED,to_add,demand_macro,CPI
+INDIA,consumer_growth,interest_rate,rbi_policy_rate,high,monthly,RBI,,to_add,global_financial,Repo rate
+INDIA,consumer_growth,bond_yield,india_10y_yield,high,monthly,RBI,FRED,to_add,global_financial,Government bond yield
+INDIA,consumer_growth,industrial_activity,india_industrial_production,high,monthly,MOSPI,FRED,to_add,copper_demand,Industrial production
+INDIA,consumer_growth,infrastructure,india_infrastructure_output,medium,monthly,MOSPI,,to_add,copper_demand,Infrastructure proxy
+
+SOUTH_KOREA,consumer_industrial,fx,usd_krw,high,monthly,BOK,FRED,to_add,global_financial,USD KRW
+SOUTH_KOREA,consumer_industrial,inflation,korea_cpi,medium,monthly,KOSIS,FRED,to_add,demand_macro,CPI
+SOUTH_KOREA,consumer_industrial,interest_rate,bok_policy_rate,high,monthly,BOK,,to_add,global_financial,Base rate
+SOUTH_KOREA,consumer_industrial,bond_yield,korea_10y_yield,medium,monthly,BOK,,to_add,global_financial,Government bond yield
+SOUTH_KOREA,consumer_industrial,industrial_activity,korea_industrial_production,high,monthly,KOSIS,FRED,to_add,copper_demand,Industrial activity
+SOUTH_KOREA,consumer_industrial,exports,korea_exports,high,monthly,KCS,KOSIS,to_add,leading_demand,Export cycle
+SOUTH_KOREA,consumer_industrial,semiconductors,korea_semiconductor_exports,medium,monthly,KCS,KOSIS,to_add,leading_demand,Electronics cycle
+
+CHILE,producer,fx,usd_clp,high,monthly,BCCh,FRED,to_add,copper_supply,Producer currency
+CHILE,producer,inflation,chile_cpi,medium,monthly,BCCh,FRED,to_add,cost_macro,CPI
+CHILE,producer,interest_rate,chile_policy_rate,medium,monthly,BCCh,,to_add,cost_macro,Monetary conditions
+CHILE,producer,copper_supply,chile_copper_production,high,annual,COCHILCO,,existing,copper_supply,Copper production
+CHILE,producer,labor,chile_mining_wage_index,high,annual,COCHILCO,,existing,cost_driver,Mining labor
+CHILE,producer,energy,chile_mining_energy,high,annual,COCHILCO,,existing,cost_driver,Mining energy
+CHILE,producer,ore_grade,chile_copper_ore_grade,high,annual,COCHILCO,,existing,cost_driver,Ore grade
+
+PERU,producer,fx,usd_pen,high,monthly,BCRP,,existing,copper_supply,Producer currency
+PERU,producer,inflation,peru_cpi,medium,monthly,BCRP,,to_add,cost_macro,CPI
+PERU,producer,interest_rate,peru_policy_rate,medium,monthly,BCRP,,to_add,cost_macro,Policy rate
+PERU,producer,copper_supply,peru_copper_production,high,annual,BCRP,MINEM,existing,copper_supply,Copper production
+PERU,producer,labor,peru_formal_private_income,medium,monthly,BCRP,,existing,cost_driver,General formal labor income proxy
+PERU,producer,energy,peru_diesel_price_index,high,monthly,BCRP,,existing,cost_driver,Mining fuel proxy
+PERU,producer,electricity,peru_industrial_electricity_tariff_index,high,monthly,BCRP,,existing,cost_driver,Electricity cost proxy
+
+INDONESIA,producer_refiner,fx,usd_idr,high,monthly,Bank Indonesia,FRED,to_add,copper_supply,Producer currency
+INDONESIA,producer_refiner,inflation,indonesia_cpi,medium,monthly,BPS,FRED,to_add,cost_macro,CPI
+INDONESIA,producer_refiner,interest_rate,indonesia_policy_rate,medium,monthly,Bank Indonesia,,to_add,cost_macro,Policy rate
+INDONESIA,producer_refiner,industrial_activity,indonesia_industrial_production,medium,monthly,BPS,FRED,to_add,demand_macro,Industrial activity
+INDONESIA,producer_refiner,copper_supply,indonesia_copper_production,high,annual,USGS,Government,to_add,copper_supply,Copper mine production
+
+DRC,producer,fx,usd_cdf,medium,monthly,Central Bank DRC,IMF,to_add,copper_supply,Only if reliable history exists
+DRC,producer,inflation,drc_cpi,medium,monthly,Central Bank DRC,IMF,to_add,cost_macro,Only if reliable history exists
+DRC,producer,copper_supply,drc_copper_production,high,annual,USGS,Government,to_add,copper_supply,Major mine supply

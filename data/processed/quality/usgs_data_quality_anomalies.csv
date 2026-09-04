@@ -1,0 +1,5 @@
+observation_year,world_copper_mine_production_ton,world_copper_refinery_production_ton,world_copper_reserves_ton,is_estimate,report_year,source,issue
+2016,20100000.0,,,False,2018,USGS_MCS2018,null_world_copper_refinery_production_ton
+2017,20000000.0,,790000000.0,False,2019,USGS_MCS2019,null_world_copper_refinery_production_ton
+2016,20100000.0,,,False,2018,USGS_MCS2018,null_world_copper_reserves_ton
+2021,21200000.0,25300000.0,,False,2023,USGS_MCS2023,null_world_copper_reserves_ton

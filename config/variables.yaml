@@ -1,0 +1,156 @@
+variables:
+
+  lme_cash:
+    source: westmetall
+    category: copper_market
+    frequency: daily
+    unit: usd_per_ton
+    role: target
+
+  lme_3_month:
+    source: westmetall
+    category: copper_market
+    frequency: daily
+    unit: usd_per_ton
+    role: feature
+
+  copper_stock_ton:
+    source: westmetall
+    category: copper_market
+    frequency: daily
+    unit: ton
+    role: feature
+
+  fed_interest_rate:
+    source: fred
+    category: macro
+    frequency: monthly
+    unit: percent
+    role: feature
+
+  us_cpi_index:
+    source: fred
+    category: macro
+    frequency: monthly
+    unit: index
+    role: feature
+
+  us_industrial_production:
+    source: fred
+    category: demand_macro
+    frequency: monthly
+    unit: index
+    role: feature
+
+  us_10y_treasury_yield:
+    source: fred
+    category: macro
+    frequency: monthly
+    unit: percent
+    role: feature
+
+  m2_money_supply:
+    source: fred
+    category: macro
+    frequency: monthly
+    unit: billion_usd
+    role: feature
+
+  brent_oil_usd:
+    source: fred
+    category: energy
+    frequency: monthly
+    unit: usd_per_barrel
+    role: feature
+
+  copper_fred_usd_per_ton:
+    source: fred
+    category: copper_market
+    frequency: monthly
+    unit: usd_per_ton
+    role: benchmark
+    
+      natural_gas_usd:
+    source: fred
+    category: energy
+    frequency: monthly
+    unit: usd_per_mmbtu
+    role: feature
+
+  vix_index:
+    source: fred
+    category: risk
+    frequency: monthly
+    unit: index
+    role: feature
+
+  eur_usd:
+    source: fred
+    category: currency
+    frequency: monthly
+    unit: usd_per_eur
+    role: feature
+    
+      dollar_index:
+    source: fred
+    category: currency
+    frequency: monthly
+    unit: index
+    role: feature
+    
+      usd_cny:
+    source: fred
+    category: currency
+    frequency: monthly
+    unit: cny_per_usd
+    role: feature
+
+  usd_jpy:
+    source: fred
+    category: currency
+    frequency: monthly
+    unit: jpy_per_usd
+    role: feature
+
+  usd_gbp:
+    source: fred
+    category: currency
+    frequency: monthly
+    unit: gbp_per_usd
+    role: feature
+    
+      japan_manufacturing_growth:
+    source: fred_oecd
+    category: demand_macro
+    geography: japan
+    frequency: monthly
+    unit: percent_change_previous_period
+    role: feature
+    
+      icsg_mine_production:
+    source: icsg
+    category: supply
+    frequency: annual
+    unit: ton
+    role: validation
+
+  icsg_refined_production:
+    source: icsg
+    category: supply
+    frequency: annual
+    unit: ton
+    role: validation
+
+  icsg_refined_usage:
+    source: icsg
+    category: demand
+    frequency: annual
+    unit: ton
+    role: feature
+
+  icsg_refined_balance:
+    source: icsg
+    category: copper_market
+    frequency: annual
+    unit: ton
+    role: feature

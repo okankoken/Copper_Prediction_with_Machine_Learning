@@ -1,0 +1,41 @@
+country,role,variable_group,variable_name,priority,target_frequency,data_tier,status,model_use,notes
+Chile,mine,production,copper_production,high,annual,A,available,yes,COCHILCO
+Chile,mine,cost,mining_wage,high,annual,A,available,yes,COCHILCO
+Chile,mine,cost,electricity,high,annual,A,available,yes,COCHILCO
+Chile,mine,cost,fuel,high,annual,A,available,yes,COCHILCO
+Chile,mine,input,sulfuric_acid,high,annual,A,available,yes,COCHILCO
+Chile,mine,quality,ore_grade,high,annual,A,available,yes,COCHILCO
+Chile,mine,disruption,strike_shutdown,high,event,C,to_collect,yes,Major events only
+Chile,mine,macro,usd_clp,medium,monthly,A,to_collect,yes,FX
+
+Peru,mine,production,copper_production,high,annual,A,to_collect,yes,
+Peru,mine,cost,mining_wage,high,monthly_or_annual,B,to_collect,yes,
+Peru,mine,cost,electricity,high,monthly_or_annual,B,to_collect,yes,
+Peru,mine,cost,fuel,high,monthly,B,to_collect,yes,
+Peru,mine,input,sulfuric_acid,medium,annual,B,to_collect,maybe,
+Peru,mine,quality,ore_grade,high,annual,B,to_collect,yes,
+Peru,mine,disruption,strike_shutdown,high,event,C,to_collect,yes,Strike protest road blockade
+Peru,mine,macro,usd_pen,medium,monthly,A,to_collect,yes,
+
+DRC,mine,production,copper_production,high,annual,A,to_collect,yes,
+DRC,mine,cost,mining_wage,medium,annual,C,to_collect,maybe,
+DRC,mine,cost,electricity,high,annual_or_monthly,B,to_collect,yes,
+DRC,mine,cost,fuel,medium,monthly,B,to_collect,yes,
+DRC,mine,quality,ore_grade,medium,annual,C,to_collect,maybe,
+DRC,mine,disruption,strike_shutdown,high,event,C,to_collect,yes,Power political conflict operational
+DRC,mine,macro,usd_cdf,medium,monthly,B,to_collect,yes,
+
+Indonesia,mine,production,copper_production,high,annual,A,to_collect,yes,
+Indonesia,mine,cost,mining_wage,medium,annual,B,to_collect,maybe,
+Indonesia,mine,cost,electricity,high,monthly_or_annual,B,to_collect,yes,
+Indonesia,mine,cost,fuel,high,monthly,B,to_collect,yes,
+Indonesia,mine,quality,ore_grade,medium,annual,B,to_collect,maybe,
+Indonesia,mine,disruption,strike_shutdown,high,event,C,to_collect,yes,Weather smelter mine disruptions
+Indonesia,mine,macro,usd_idr,medium,monthly,A,to_collect,yes,
+
+China,mine_smelter_consumer,production,copper_production,high,annual,A,to_collect,yes,
+China,mine_smelter_consumer,cost,mining_wage,medium,annual,B,to_collect,maybe,
+China,mine_smelter_consumer,cost,electricity,high,monthly,B,to_collect,yes,
+China,mine_smelter_consumer,processing,tc_rc,high,monthly,B,to_collect,yes,Treatment refining charge
+China,mine_smelter_consumer,disruption,strike_shutdown,medium,event,C,to_collect,maybe,
+China,mine_smelter_consumer,macro,usd_cny,high,monthly,A,available,yes,FRED already available
