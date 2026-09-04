@@ -1,0 +1,64 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow local artifacts
+mlruns/
+mlartifacts/
+
+# Airflow local runtime files
+airflow/logs/
+airflow/airflow.db
+airflow/*.pid
+
+# Local credentials
+*.pem
+*.key
+credentials.json
+service_account.json
+
+# Backup files
+*.bak
+*.backup
+
+# Accidental shell artifacts
+-E
+--exclude-dir=__pycache__
+PY
+PROJECT_ROOT*
