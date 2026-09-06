@@ -29,12 +29,11 @@ OUTPUT_FILE = (
 
 TARGET_COLUMN = "cash_settlement_usd_per_ton"
 
-HORIZONS = [
-    1,
-    3,
-    6,
-    12,
-]
+# Production forecast horizons:
+# H1 through H12.
+HORIZONS = list(
+    range(1, 13)
+)
 
 
 # These categories are considered known at the completed
@@ -81,6 +80,7 @@ def load_data():
     plan["include"] = (
         plan["include"]
         .astype(str)
+        .str.strip()
         .str.lower()
         .map(
             {
@@ -101,6 +101,52 @@ def load_data():
     )
 
 
+def validate_dates(
+    model_features,
+    master,
+):
+    if (
+        model_features["date"]
+        .duplicated()
+        .any()
+    ):
+        raise ValueError(
+            "Duplicate dates found in model feature dataset"
+        )
+
+    if (
+        master["date"]
+        .duplicated()
+        .any()
+    ):
+        raise ValueError(
+            "Duplicate dates found in master dataset"
+        )
+
+    if not model_features[
+        "date"
+    ].equals(
+        master["date"]
+    ):
+        raise ValueError(
+            "Model feature dates and master dates do not match"
+        )
+
+    if not master[
+        "date"
+    ].is_monotonic_increasing:
+        raise ValueError(
+            "Master dates are not sorted"
+        )
+
+    if not model_features[
+        "date"
+    ].is_monotonic_increasing:
+        raise ValueError(
+            "Model feature dates are not sorted"
+        )
+
+
 def get_current_available_features(
     plan,
 ):
@@ -114,6 +160,7 @@ def get_current_available_features(
         selected[
             "output_column"
         ]
+        .dropna()
         .drop_duplicates()
         .tolist()
     )
@@ -125,53 +172,11 @@ def get_current_available_features(
     ]
 
 
-def main():
-    print("=" * 80)
-    print("BUILD FORECAST-ORIGIN MULTI-HORIZON DATASET")
-    print("=" * 80)
-
-    (
-        model_features,
-        master,
-        plan,
-    ) = load_data()
-
-    model_features = (
-        model_features
-        .sort_values("date")
-        .reset_index(drop=True)
-    )
-
-    master = (
-        master
-        .sort_values("date")
-        .reset_index(drop=True)
-    )
-
-    if not model_features[
-        "date"
-    ].equals(
-        master["date"]
-    ):
-        raise ValueError(
-            "Model feature dates and master dates do not match"
-        )
-
-    if TARGET_COLUMN not in master.columns:
-        raise ValueError(
-            f"Target not found: {TARGET_COLUMN}"
-        )
-
-    # Start from previously created leakage-safe
-    # lagged and transformed features.
-    result = model_features.drop(
-        columns=[
-            TARGET_COLUMN
-        ]
-    ).copy()
-
-    # Current completed-month copper price is known
-    # at the forecast origin.
+def add_current_origin_features(
+    result,
+    master,
+    plan,
+):
     result[
         "origin_copper_price_usd_per_ton"
     ] = master[
@@ -185,9 +190,13 @@ def main():
     )
 
     added_current_features = []
+    missing_current_features = []
 
     for column in current_features:
         if column not in master.columns:
+            missing_current_features.append(
+                column
+            )
             continue
 
         output_column = (
@@ -204,7 +213,17 @@ def main():
             output_column
         )
 
-    # Create future labels from the realized target.
+    return (
+        result,
+        added_current_features,
+        missing_current_features,
+    )
+
+
+def add_future_targets(
+    result,
+    master,
+):
     for horizon in HORIZONS:
         target_column = (
             f"target_h{horizon}"
@@ -234,56 +253,78 @@ def main():
             )
         )
 
-    result.to_csv(
-        OUTPUT_FILE,
-        index=False,
+    return result
+
+
+def validate_horizon_targets(
+    result,
+):
+    row_count = len(
+        result
     )
 
-    print()
-    print(
-        "[INFO] Shape:",
-        result.shape,
-    )
-
-    print(
-        "[INFO] First origin:",
-        result["date"]
-        .min()
-        .strftime("%Y-%m-%d"),
-    )
-
-    print(
-        "[INFO] Last origin:",
-        result["date"]
-        .max()
-        .strftime("%Y-%m-%d"),
-    )
-
-    print()
-    print(
-        "[INFO] Current-origin market features added:",
-        len(
-            added_current_features
-        ),
-    )
-
-    print()
-    print("CURRENT-ORIGIN CATEGORIES")
-
-    for category in sorted(
-        CURRENT_AVAILABLE_CATEGORIES
-    ):
-        count = int(
-            (
-                plan["category"]
-                == category
-            ).sum()
+    for horizon in HORIZONS:
+        target_column = (
+            f"target_h{horizon}"
         )
 
-        print(
-            f"{category}: {count}"
+        target_date_column = (
+            f"target_date_h{horizon}"
         )
 
+        if target_column not in result.columns:
+            raise ValueError(
+                f"Missing target column: {target_column}"
+            )
+
+        if target_date_column not in result.columns:
+            raise ValueError(
+                f"Missing target date column: {target_date_column}"
+            )
+
+        expected_available = max(
+            row_count - horizon,
+            0,
+        )
+
+        actual_available = int(
+            result[
+                target_column
+            ]
+            .notna()
+            .sum()
+        )
+
+        if (
+            actual_available
+            != expected_available
+        ):
+            raise ValueError(
+                f"H{horizon} target availability mismatch. "
+                f"Expected={expected_available}, "
+                f"actual={actual_available}"
+            )
+
+        expected_dates = (
+            result["date"]
+            + pd.offsets.MonthEnd(
+                horizon
+            )
+        )
+
+        if not result[
+            target_date_column
+        ].equals(
+            expected_dates
+        ):
+            raise ValueError(
+                f"H{horizon} target dates are misaligned"
+            )
+
+
+def print_target_availability(
+    result,
+):
     print()
     print("TARGET AVAILABILITY")
 
@@ -314,6 +355,10 @@ def main():
             f"future_unlabeled={missing}"
         )
 
+
+def print_latest_origin(
+    result,
+):
     latest = result.iloc[
         -1
     ]
@@ -337,13 +382,16 @@ def main():
         ],
     )
 
+    print()
+    print("PRODUCTION FORECAST CALENDAR")
+
     for horizon in HORIZONS:
         target_date_column = (
             f"target_date_h{horizon}"
         )
 
         print(
-            f"H{horizon:02d} forecast date:",
+            f"H{horizon:02d}:",
             latest[
                 target_date_column
             ].strftime(
@@ -351,13 +399,190 @@ def main():
             ),
         )
 
+
+def main():
+    print("=" * 80)
+    print("BUILD FORECAST-ORIGIN MULTI-HORIZON DATASET")
+    print("=" * 80)
+
+    (
+        model_features,
+        master,
+        plan,
+    ) = load_data()
+
+    model_features = (
+        model_features
+        .sort_values(
+            "date"
+        )
+        .reset_index(
+            drop=True
+        )
+    )
+
+    master = (
+        master
+        .sort_values(
+            "date"
+        )
+        .reset_index(
+            drop=True
+        )
+    )
+
+    validate_dates(
+        model_features,
+        master,
+    )
+
+    if TARGET_COLUMN not in master.columns:
+        raise ValueError(
+            f"Target not found: {TARGET_COLUMN}"
+        )
+
+    # Start from previously created leakage-safe
+    # lagged and transformed model features.
+    if TARGET_COLUMN in model_features.columns:
+        result = model_features.drop(
+            columns=[
+                TARGET_COLUMN
+            ]
+        ).copy()
+    else:
+        result = model_features.copy()
+
+    (
+        result,
+        added_current_features,
+        missing_current_features,
+    ) = add_current_origin_features(
+        result=result,
+        master=master,
+        plan=plan,
+    )
+
+    # Add H1 through H12 realized future targets.
+    result = add_future_targets(
+        result=result,
+        master=master,
+    )
+
+    validate_horizon_targets(
+        result
+    )
+
+    result.to_csv(
+        OUTPUT_FILE,
+        index=False,
+    )
+
+    print()
+    print(
+        "[INFO] Shape:",
+        result.shape,
+    )
+
+    print(
+        "[INFO] First origin:",
+        result[
+            "date"
+        ]
+        .min()
+        .strftime(
+            "%Y-%m-%d"
+        ),
+    )
+
+    print(
+        "[INFO] Last origin:",
+        result[
+            "date"
+        ]
+        .max()
+        .strftime(
+            "%Y-%m-%d"
+        ),
+    )
+
+    print()
+    print(
+        "[INFO] Forecast horizons:",
+        len(
+            HORIZONS
+        ),
+    )
+
+    print(
+        "[INFO] Horizons:",
+        HORIZONS,
+    )
+
+    print()
+    print(
+        "[INFO] Current-origin market features added:",
+        len(
+            added_current_features
+        ),
+    )
+
+    if missing_current_features:
+        print(
+            "[WARN] Planned current-origin features "
+            "missing from master:",
+            len(
+                missing_current_features
+            ),
+        )
+
+        for column in (
+            missing_current_features
+        ):
+            print(
+                "  -",
+                column,
+            )
+
+    print()
+    print("CURRENT-ORIGIN CATEGORIES")
+
+    for category in sorted(
+        CURRENT_AVAILABLE_CATEGORIES
+    ):
+        count = int(
+            (
+                plan[
+                    "category"
+                ]
+                == category
+            ).sum()
+        )
+
+        print(
+            f"{category}: {count}"
+        )
+
+    print_target_availability(
+        result
+    )
+
+    print_latest_origin(
+        result
+    )
+
     print()
     print(
         "[IMPORTANT] Monthly macro features remain lagged."
     )
 
     print(
-        "[IMPORTANT] Current-origin values are limited to completed market data."
+        "[IMPORTANT] Current-origin values are limited "
+        "to completed market data."
+    )
+
+    print(
+        "[IMPORTANT] Future targets are labels only "
+        "and must never be used as predictors."
     )
 
     print()

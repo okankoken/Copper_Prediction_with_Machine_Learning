@@ -1,0 +1,33 @@
+{
+  "project": "Copper_Prediction_with_Machine_Learning",
+  "forecast_origin": "2026-08-31",
+  "generated_at": "2026-09-06T13:44:13.941036",
+  "production_policy_version": "v1_reconciled_h1_blend",
+  "origin_price_usd_per_ton": 14335.722222222224,
+  "input_snapshots": {
+    "monthly_master": {
+      "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/processed/monthly/archive/copper_monthly_master_2026-08-31_20260906T125534.csv",
+      "file_name": "copper_monthly_master_2026-08-31_20260906T125534.csv",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "model_features": {
+      "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/processed/features/archive/copper_model_features_2026-08-31_20260906T125534.csv",
+      "file_name": "copper_model_features_2026-08-31_20260906T125534.csv",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "multi_horizon_features": {
+      "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/processed/features/archive/copper_multi_horizon_features_2026-08-31_20260906T125534.csv",
+      "file_name": "copper_multi_horizon_features_2026-08-31_20260906T125534.csv",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "feature_manifest": {
+      "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/processed/features/archive/copper_model_feature_manifest_2026-08-31_20260906T125534.csv",
+      "file_name": "copper_model_feature_manifest_2026-08-31_20260906T125534.csv",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

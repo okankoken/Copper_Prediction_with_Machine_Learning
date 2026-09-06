@@ -1,15 +1,19 @@
-from pathlib import Path
-
 import pandas as pd
+
 from src.utils.paths import SHIPPING_RAW_DIR
+
+
 SOURCE_FILE = (
     SHIPPING_RAW_DIR
     / "Baltic Dry Index Geçmiş Verileri.csv"
 )
+
 OUTPUT_FILE = (
     SHIPPING_RAW_DIR
     / "baltic_dry_index_daily.csv"
 )
+
+
 def parse_investing_number(series):
     """
     Convert Investing.com Turkish formatted numbers.
@@ -44,6 +48,9 @@ def parse_investing_number(series):
 def load_source_data():
     """
     Load the manually downloaded Investing.com BDI file.
+
+    The source file is intentionally preserved after ingestion.
+    The user can replace it with a newer file before the next run.
     """
 
     if not SOURCE_FILE.exists():
@@ -216,6 +223,9 @@ def validate_standardized_data(df):
 def save_output(df):
     """
     Save standardized BDI dataset.
+
+    The standardized output file is refreshed on every run.
+    The manually downloaded source file is never deleted.
     """
 
     output_df = df.copy()
@@ -237,28 +247,15 @@ def save_output(df):
         OUTPUT_FILE,
     )
 
-    return output_df
-
-
-def delete_source_file():
-    """
-    Delete the manually downloaded source file
-    after successful ingestion.
-    """
-
-    if not SOURCE_FILE.exists():
-        return
-
-    SOURCE_FILE.unlink()
-
     print(
-        "[OK] Deleted source file:",
+        "[INFO] Manual source preserved:",
         SOURCE_FILE,
     )
 
+    return output_df
+
 
 def main():
-
     print(
         "=" * 100
     )
@@ -352,9 +349,6 @@ def main():
         )
     )
 
-    # Delete source only after successful processing and save
-    delete_source_file()
-
     print(
         "\n"
         + "=" * 100
@@ -362,6 +356,10 @@ def main():
 
     print(
         "[PASS] BDI ingestion completed"
+    )
+
+    print(
+        "[INFO] Source file was preserved"
     )
 
     print(

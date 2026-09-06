@@ -1,0 +1,5 @@
+source_name,file_path,category,frequency,required
+Chile_IPSA,data/raw/equities/Chile_IPSA_Historical_Data.csv,equities,monthly,true
+China_CSI300,data/raw/equities/China_CSI300_Historical_Data.csv,equities,monthly,true
+Poland_WIG20,data/raw/equities/Poland_WIG20_Historical_Data.csv,equities,monthly,true
+Baltic_Dry_Index,data/raw/shipping/baltic_dry_index_daily.csv,shipping,monthly,true

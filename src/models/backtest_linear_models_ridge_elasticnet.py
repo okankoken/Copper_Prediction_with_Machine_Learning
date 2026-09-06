@@ -50,12 +50,9 @@ PARAMETER_FILE = (
 )
 
 
-HORIZONS = [
-    1,
-    3,
-    6,
-    12,
-]
+HORIZONS = list(
+    range(1, 13)
+)
 
 TRAINING_WINDOWS = [
     5,
@@ -97,44 +94,31 @@ ELASTICNET_L1_RATIO_GRID = [
 ]
 
 
-def mae(
-    actual,
-    predicted,
-):
+def mae(actual, predicted):
     return float(
         np.mean(
             np.abs(
-                actual
-                - predicted
+                actual - predicted
             )
         )
     )
 
 
-def rmse(
-    actual,
-    predicted,
-):
+def rmse(actual, predicted):
     return float(
         np.sqrt(
             np.mean(
                 (
-                    actual
-                    - predicted
+                    actual - predicted
                 ) ** 2
             )
         )
     )
 
 
-def mape(
-    actual,
-    predicted,
-):
+def mape(actual, predicted):
     mask = (
-        np.abs(
-            actual
-        )
+        np.abs(actual)
         > 1e-12
     )
 
@@ -155,17 +139,10 @@ def mape(
     )
 
 
-def smape(
-    actual,
-    predicted,
-):
+def smape(actual, predicted):
     denominator = (
-        np.abs(
-            actual
-        )
-        + np.abs(
-            predicted
-        )
+        np.abs(actual)
+        + np.abs(predicted)
     )
 
     mask = (
@@ -189,14 +166,10 @@ def smape(
     )
 
 
-def bias(
-    actual,
-    predicted,
-):
+def bias(actual, predicted):
     return float(
         np.mean(
-            predicted
-            - actual
+            predicted - actual
         )
     )
 
@@ -207,13 +180,11 @@ def directional_accuracy(
     predicted,
 ):
     actual_direction = np.sign(
-        actual
-        - origin
+        actual - origin
     )
 
     predicted_direction = np.sign(
-        predicted
-        - origin
+        predicted - origin
     )
 
     return float(
@@ -383,7 +354,8 @@ def build_elasticnet_search(
             (
                 "model",
                 ElasticNet(
-                    max_iter=20000,
+                    max_iter=50000,
+                    tol=1e-3,
                     random_state=42,
                 ),
             ),
@@ -415,7 +387,7 @@ def build_elasticnet_search(
 
 def main():
     print("=" * 80)
-    print("RIDGE AND ELASTIC NET WALK-FORWARD BACKTEST")
+    print("RIDGE AND ELASTIC NET H1-H12 WALK-FORWARD BACKTEST")
     print("=" * 80)
 
     DIAGNOSTICS_DIR.mkdir(
@@ -423,15 +395,16 @@ def main():
         exist_ok=True,
     )
 
+    parse_date_columns = [
+        "date",
+    ] + [
+        f"target_date_h{horizon}"
+        for horizon in HORIZONS
+    ]
+
     df = pd.read_csv(
         INPUT_FILE,
-        parse_dates=[
-            "date",
-            "target_date_h1",
-            "target_date_h3",
-            "target_date_h6",
-            "target_date_h12",
-        ],
+        parse_dates=parse_date_columns,
     )
 
     df = (
@@ -486,7 +459,7 @@ def main():
 
             print()
             print(
-                f"[INFO] H{horizon}: "
+                f"[INFO] H{horizon:02d}: "
                 f"{len(test_origins)} "
                 "backtest origins"
             )
@@ -716,7 +689,7 @@ def main():
                     )
                 ):
                     print(
-                        f"  H{horizon} "
+                        f"  H{horizon:02d} "
                         f"{index}/"
                         f"{len(test_origins)} "
                         f"| origin="
@@ -867,7 +840,7 @@ def main():
 
     print()
     print("=" * 80)
-    print("RIDGE AND ELASTIC NET RESULTS")
+    print("RIDGE AND ELASTIC NET H1-H12 RESULTS")
     print("=" * 80)
     print()
 

@@ -1,0 +1,26 @@
+{
+  "project": "Copper_Prediction_with_Machine_Learning",
+  "forecast_origin": "2026-08-31",
+  "generated_at": "2026-09-06T12:52:36.578718",
+  "production_policy_version": "v1_reconciled_h1_blend",
+  "origin_price_usd_per_ton": 14335.722222222224,
+  "horizon_count": 12,
+  "production_forecast": {
+    "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/predictions/copper_production_forecast_latest.csv",
+    "file_name": "copper_production_forecast_latest.csv",
+    "size_bytes": 4533,
+    "sha256": "19cf31f833e75bc69c8b18f36c5c4eb0700033d5aca6a54af01a624cc6d42283"
+  },
+  "production_model_details": {
+    "path": "/home/train/Copper_Prediction_with_Machine_Learning/data/predictions/copper_production_model_details_latest.csv",
+    "file_name": "copper_production_model_details_latest.csv",
+    "size_bytes": 7594,
+    "sha256": "72ea6c7b89e7f8c23f2a2c375ac8ec55e020456826ebc488476daefdb19cd9ad"
+  },
+  "input_snapshots": {
+    "monthly_master": null,
+    "model_features": null,
+    "multi_horizon_features": null,
+    "feature_manifest": null
+  }
+}

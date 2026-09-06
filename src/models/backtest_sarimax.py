@@ -36,12 +36,9 @@ FEATURE_USAGE_FILE = (
 )
 
 
-HORIZONS = [
-    1,
-    3,
-    6,
-    12,
-]
+HORIZONS = list(
+    range(1, 13)
+)
 
 TRAINING_WINDOWS = [
     5,
@@ -79,44 +76,31 @@ def get_max_exog(
     return 5
 
 
-def mae(
-    actual,
-    predicted,
-):
+def mae(actual, predicted):
     return float(
         np.mean(
             np.abs(
-                actual
-                - predicted
+                actual - predicted
             )
         )
     )
 
 
-def rmse(
-    actual,
-    predicted,
-):
+def rmse(actual, predicted):
     return float(
         np.sqrt(
             np.mean(
                 (
-                    actual
-                    - predicted
+                    actual - predicted
                 ) ** 2
             )
         )
     )
 
 
-def mape(
-    actual,
-    predicted,
-):
+def mape(actual, predicted):
     mask = (
-        np.abs(
-            actual
-        )
+        np.abs(actual)
         > 1e-12
     )
 
@@ -137,17 +121,10 @@ def mape(
     )
 
 
-def smape(
-    actual,
-    predicted,
-):
+def smape(actual, predicted):
     denominator = (
-        np.abs(
-            actual
-        )
-        + np.abs(
-            predicted
-        )
+        np.abs(actual)
+        + np.abs(predicted)
     )
 
     mask = (
@@ -171,14 +148,10 @@ def smape(
     )
 
 
-def bias(
-    actual,
-    predicted,
-):
+def bias(actual, predicted):
     return float(
         np.mean(
-            predicted
-            - actual
+            predicted - actual
         )
     )
 
@@ -189,13 +162,11 @@ def directional_accuracy(
     predicted,
 ):
     actual_direction = np.sign(
-        actual
-        - origin
+        actual - origin
     )
 
     predicted_direction = np.sign(
-        predicted
-        - origin
+        predicted - origin
     )
 
     return float(
@@ -313,8 +284,6 @@ def select_exogenous_features(
         target_column=target_column,
     )
 
-    # Target-history features are not treated
-    # as external regressors in SARIMAX.
     filtered = [
         feature
         for feature in selected
@@ -481,7 +450,7 @@ def fit_best_sarimax(
 
 def main():
     print("=" * 80)
-    print("SARIMAX WALK-FORWARD BACKTEST")
+    print("SARIMAX H1-H12 WALK-FORWARD BACKTEST")
     print("=" * 80)
 
     DIAGNOSTICS_DIR.mkdir(
@@ -489,15 +458,16 @@ def main():
         exist_ok=True,
     )
 
+    parse_date_columns = [
+        "date",
+    ] + [
+        f"target_date_h{horizon}"
+        for horizon in HORIZONS
+    ]
+
     df = pd.read_csv(
         INPUT_FILE,
-        parse_dates=[
-            "date",
-            "target_date_h1",
-            "target_date_h3",
-            "target_date_h6",
-            "target_date_h12",
-        ],
+        parse_dates=parse_date_columns,
     )
 
     df = (
@@ -517,12 +487,10 @@ def main():
     for window_years in TRAINING_WINDOWS:
         print()
         print("=" * 80)
-
         print(
             f"TRAINING WINDOW: "
             f"{window_years} YEARS"
         )
-
         print("=" * 80)
 
         max_exog = get_max_exog(
@@ -556,9 +524,8 @@ def main():
             )
 
             print()
-
             print(
-                f"[INFO] H{horizon}: "
+                f"[INFO] H{horizon:02d}: "
                 f"{len(test_origins)} "
                 "backtest origins"
             )
@@ -567,18 +534,14 @@ def main():
                 test_origins,
                 start=1,
             ):
-                training = (
-                    prepare_training(
-                        df,
-                        forecast_origin,
-                        horizon,
-                        window_years,
-                    )
+                training = prepare_training(
+                    df,
+                    forecast_origin,
+                    horizon,
+                    window_years,
                 )
 
-                if len(
-                    training
-                ) < 36:
+                if len(training) < 36:
                     continue
 
                 selected_exog = (
@@ -610,9 +573,6 @@ def main():
                     )
                 ].copy()
 
-                # For a direct H-horizon target,
-                # the model series ends h months
-                # before the forecast origin.
                 if (
                     len(
                         forecast_path
@@ -653,24 +613,6 @@ def main():
                 if not selected_exog:
                     continue
 
-                if len(
-                    y_train
-                ) != len(
-                    X_train
-                ):
-                    raise RuntimeError(
-                        "Training target and exogenous "
-                        "row counts do not match"
-                    )
-
-                if len(
-                    X_forecast
-                ) != horizon:
-                    raise RuntimeError(
-                        "Forecast exogenous path "
-                        "does not match horizon"
-                    )
-
                 (
                     model_result,
                     best_order,
@@ -705,9 +647,6 @@ def main():
                     == forecast_origin
                 ]
 
-                if test_row.empty:
-                    continue
-
                 actual = float(
                     test_row[
                         target_column
@@ -739,9 +678,7 @@ def main():
                         "target_date":
                             target_date,
                         "training_rows":
-                            len(
-                                training
-                            ),
+                            len(training),
                         "selected_exog_count":
                             len(
                                 selected_exog
@@ -787,7 +724,7 @@ def main():
                     )
                 ):
                     print(
-                        f"  H{horizon} "
+                        f"  H{horizon:02d} "
                         f"{index}/"
                         f"{len(test_origins)} "
                         f"| origin="
@@ -808,8 +745,7 @@ def main():
 
     if predictions.empty:
         raise RuntimeError(
-            "No SARIMAX backtest "
-            "predictions were produced"
+            "No SARIMAX predictions were produced"
         )
 
     metric_rows = []
@@ -932,7 +868,7 @@ def main():
 
     print()
     print("=" * 80)
-    print("SARIMAX RESULTS")
+    print("SARIMAX H1-H12 RESULTS")
     print("=" * 80)
     print()
 

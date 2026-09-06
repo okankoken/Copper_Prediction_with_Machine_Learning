@@ -268,14 +268,13 @@ def build_model_search(
     model = LGBMRegressor(
         objective="regression_l1",
         random_state=42,
-        n_jobs=-1,
+        n_jobs=1,
         verbosity=-1,
     )
-
     parameter_grid = {
         "n_estimators": [
             100,
-            250,
+            200,
         ],
         "learning_rate": [
             0.03,
@@ -283,15 +282,12 @@ def build_model_search(
         ],
         "max_depth": [
             2,
-            3,
         ],
         "num_leaves": [
             7,
-            15,
         ],
         "min_child_samples": [
             10,
-            20,
         ],
         "subsample": [
             0.8,
@@ -301,11 +297,9 @@ def build_model_search(
         ],
         "reg_alpha": [
             0.0,
-            0.5,
         ],
         "reg_lambda": [
             1.0,
-            5.0,
         ],
     }
 

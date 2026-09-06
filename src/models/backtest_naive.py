@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 
 from src.utils.paths import (
-    FEATURES_DIR,
     DIAGNOSTICS_DIR,
+    FEATURES_DIR,
 )
 
 
@@ -23,16 +23,17 @@ METRICS_FILE = (
 )
 
 
-ORIGIN_COLUMN = (
-    "origin_copper_price_usd_per_ton"
+HORIZONS = list(
+    range(1, 13)
 )
 
-HORIZONS = [
-    1,
-    3,
-    6,
-    12,
-]
+BACKTEST_START = pd.Timestamp(
+    "2025-01-31"
+)
+
+ORIGIN_PRICE_COLUMN = (
+    "origin_copper_price_usd_per_ton"
+)
 
 
 def mae(
@@ -42,8 +43,7 @@ def mae(
     return float(
         np.mean(
             np.abs(
-                actual
-                - predicted
+                actual - predicted
             )
         )
     )
@@ -57,8 +57,7 @@ def rmse(
         np.sqrt(
             np.mean(
                 (
-                    actual
-                    - predicted
+                    actual - predicted
                 ) ** 2
             )
         )
@@ -70,9 +69,7 @@ def mape(
     predicted,
 ):
     mask = (
-        np.abs(
-            actual
-        )
+        np.abs(actual)
         > 1e-12
     )
 
@@ -98,12 +95,8 @@ def smape(
     predicted,
 ):
     denominator = (
-        np.abs(
-            actual
-        )
-        + np.abs(
-            predicted
-        )
+        np.abs(actual)
+        + np.abs(predicted)
     )
 
     mask = (
@@ -133,8 +126,7 @@ def bias(
 ):
     return float(
         np.mean(
-            predicted
-            - actual
+            predicted - actual
         )
     )
 
@@ -145,13 +137,11 @@ def directional_accuracy(
     predicted,
 ):
     actual_direction = np.sign(
-        actual
-        - origin
+        actual - origin
     )
 
     predicted_direction = np.sign(
-        predicted
-        - origin
+        predicted - origin
     )
 
     return float(
@@ -165,21 +155,31 @@ def directional_accuracy(
 
 def main():
     print("=" * 80)
-    print("NAIVE MULTI-HORIZON BACKTEST")
+    print("NAIVE H1-H12 WALK-FORWARD BACKTEST")
     print("=" * 80)
 
-    DIAGNOSTICS_DIR.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    parse_date_columns = [
+        "date",
+    ] + [
+        f"target_date_h{horizon}"
+        for horizon in HORIZONS
+    ]
 
     df = pd.read_csv(
         INPUT_FILE,
-        parse_dates=["date"],
+        parse_dates=parse_date_columns,
+    )
+
+    df = (
+        df.sort_values(
+            "date"
+        )
+        .reset_index(
+            drop=True
+        )
     )
 
     prediction_rows = []
-    metric_rows = []
 
     for horizon in HORIZONS:
         target_column = (
@@ -190,60 +190,79 @@ def main():
             f"target_date_h{horizon}"
         )
 
-        if target_column not in df.columns:
-            raise ValueError(
-                f"Missing target: {target_column}"
+        test = df[
+            (
+                df["date"]
+                >= BACKTEST_START
+            )
+            & (
+                df[
+                    target_column
+                ]
+                .notna()
+            )
+        ].copy()
+
+        print(
+            f"[INFO] H{horizon:02d}: "
+            f"{len(test)} observations"
+        )
+
+        for _, row in test.iterrows():
+            origin_price = float(
+                row[
+                    ORIGIN_PRICE_COLUMN
+                ]
             )
 
-        subset = df[
-            [
-                "date",
-                target_date_column,
-                ORIGIN_COLUMN,
-                target_column,
-            ]
-        ].dropna().copy()
+            actual = float(
+                row[
+                    target_column
+                ]
+            )
 
-        subset[
-            "prediction"
-        ] = subset[
-            ORIGIN_COLUMN
-        ]
+            # Random walk forecast:
+            # future price equals current known price.
+            prediction = origin_price
 
-        for _, row in subset.iterrows():
             prediction_rows.append(
                 {
-                    "model": "naive",
-                    "horizon": horizon,
-                    "origin_date": row[
-                        "date"
-                    ],
-                    "target_date": row[
-                        target_date_column
-                    ],
-                    "origin_price": row[
-                        ORIGIN_COLUMN
-                    ],
-                    "actual": row[
-                        target_column
-                    ],
-                    "prediction": row[
-                        "prediction"
-                    ],
-                    "error": (
+                    "model":
+                        "naive",
+                    "horizon":
+                        horizon,
+                    "origin_date":
+                        row["date"],
+                    "target_date":
                         row[
-                            "prediction"
-                        ]
-                        - row[
-                            target_column
-                        ]
-                    ),
+                            target_date_column
+                        ],
+                    "origin_price":
+                        origin_price,
+                    "actual":
+                        actual,
+                    "prediction":
+                        prediction,
+                    "error":
+                        prediction
+                        - actual,
                 }
             )
 
+    predictions = pd.DataFrame(
+        prediction_rows
+    )
+
+    metric_rows = []
+
+    for horizon, group in (
+        predictions.groupby(
+            "horizon"
+        )
+    ):
         actual = (
-            subset[
-                target_column
+            group[
+                "actual"
             ]
             .to_numpy(
                 dtype=float
@@ -251,7 +270,7 @@ def main():
         )
 
         predicted = (
-            subset[
+            group[
                 "prediction"
             ]
             .to_numpy(
@@ -260,8 +279,8 @@ def main():
         )
 
         origin = (
-            subset[
-                ORIGIN_COLUMN
+            group[
+                "origin_price"
             ]
             .to_numpy(
                 dtype=float
@@ -270,47 +289,53 @@ def main():
 
         metric_rows.append(
             {
-                "model": "naive",
-                "horizon": horizon,
-                "observations": len(
-                    subset
-                ),
-                "mae": mae(
-                    actual,
-                    predicted,
-                ),
-                "rmse": rmse(
-                    actual,
-                    predicted,
-                ),
-                "mape_pct": mape(
-                    actual,
-                    predicted,
-                ),
-                "smape_pct": smape(
-                    actual,
-                    predicted,
-                ),
-                "bias": bias(
-                    actual,
-                    predicted,
-                ),
-                "directional_accuracy_pct": (
+                "model":
+                    "naive",
+                "horizon":
+                    horizon,
+                "observations":
+                    len(group),
+                "mae":
+                    mae(
+                        actual,
+                        predicted,
+                    ),
+                "rmse":
+                    rmse(
+                        actual,
+                        predicted,
+                    ),
+                "mape_pct":
+                    mape(
+                        actual,
+                        predicted,
+                    ),
+                "smape_pct":
+                    smape(
+                        actual,
+                        predicted,
+                    ),
+                "bias":
+                    bias(
+                        actual,
+                        predicted,
+                    ),
+                "directional_accuracy_pct":
                     directional_accuracy(
                         origin,
                         actual,
                         predicted,
-                    )
-                ),
+                    ),
             }
         )
 
-    predictions = pd.DataFrame(
-        prediction_rows
-    )
-
-    metrics = pd.DataFrame(
-        metric_rows
+    metrics = (
+        pd.DataFrame(
+            metric_rows
+        )
+        .sort_values(
+            "horizon"
+        )
     )
 
     predictions.to_csv(
@@ -324,6 +349,11 @@ def main():
     )
 
     print()
+    print("=" * 80)
+    print("NAIVE H1-H12 RESULTS")
+    print("=" * 80)
+    print()
+
     print(
         metrics.to_string(
             index=False

@@ -33,7 +33,13 @@ ORDER_USAGE_FILE = (
 )
 
 
-TARGET_COLUMN = "cash_settlement_usd_per_ton"
+TARGET_COLUMN = (
+    "cash_settlement_usd_per_ton"
+)
+
+HORIZONS = list(
+    range(1, 13)
+)
 
 TRAINING_WINDOWS = [
     5,
@@ -41,33 +47,24 @@ TRAINING_WINDOWS = [
     10,
 ]
 
-HORIZONS = [
-    1,
-    3,
-    6,
-    12,
-]
-
 BACKTEST_START = pd.Timestamp(
     "2025-01-31"
 )
 
 
-# Small and controlled ARIMA search space.
-# d=1 is appropriate for a non-stationary price level series.
-ARIMA_CANDIDATES = [
-    ((0, 1, 0), "n"),
-    ((0, 1, 0), "t"),
-    ((1, 1, 0), "n"),
-    ((0, 1, 1), "n"),
-    ((1, 1, 1), "n"),
-    ((2, 1, 0), "n"),
-    ((0, 1, 2), "n"),
-    ((2, 1, 1), "n"),
+ARIMA_ORDERS = [
+    (0, 1, 0),
+    (1, 1, 0),
+    (0, 1, 1),
+    (1, 1, 1),
+    (0, 1, 2),
 ]
 
 
-def mae(actual, predicted):
+def mae(
+    actual,
+    predicted,
+):
     return float(
         np.mean(
             np.abs(
@@ -77,7 +74,10 @@ def mae(actual, predicted):
     )
 
 
-def rmse(actual, predicted):
+def rmse(
+    actual,
+    predicted,
+):
     return float(
         np.sqrt(
             np.mean(
@@ -89,7 +89,10 @@ def rmse(actual, predicted):
     )
 
 
-def mape(actual, predicted):
+def mape(
+    actual,
+    predicted,
+):
     mask = (
         np.abs(actual)
         > 1e-12
@@ -112,7 +115,10 @@ def mape(actual, predicted):
     )
 
 
-def smape(actual, predicted):
+def smape(
+    actual,
+    predicted,
+):
     denominator = (
         np.abs(actual)
         + np.abs(predicted)
@@ -139,7 +145,10 @@ def smape(actual, predicted):
     )
 
 
-def bias(actual, predicted):
+def bias(
+    actual,
+    predicted,
+):
     return float(
         np.mean(
             predicted - actual
@@ -169,15 +178,14 @@ def directional_accuracy(
     )
 
 
-def select_best_arima(
-    series,
+def fit_best_arima(
+    y_train,
 ):
     best_result = None
     best_order = None
-    best_trend = None
     best_aic = np.inf
 
-    for order, trend in ARIMA_CANDIDATES:
+    for order in ARIMA_ORDERS:
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter(
@@ -185,9 +193,9 @@ def select_best_arima(
                 )
 
                 model = ARIMA(
-                    series,
+                    y_train,
                     order=order,
-                    trend=trend,
+                    trend="n",
                     enforce_stationarity=False,
                     enforce_invertibility=False,
                 )
@@ -198,11 +206,11 @@ def select_best_arima(
                 np.isfinite(
                     result.aic
                 )
-                and result.aic < best_aic
+                and result.aic
+                < best_aic
             ):
                 best_result = result
                 best_order = order
-                best_trend = trend
                 best_aic = float(
                     result.aic
                 )
@@ -218,14 +226,13 @@ def select_best_arima(
     return (
         best_result,
         best_order,
-        best_trend,
         best_aic,
     )
 
 
 def main():
     print("=" * 80)
-    print("ARIMA WALK-FORWARD BACKTEST")
+    print("ARIMA H1-H12 WALK-FORWARD BACKTEST")
     print("=" * 80)
 
     DIAGNOSTICS_DIR.mkdir(
@@ -235,13 +242,29 @@ def main():
 
     df = pd.read_csv(
         INPUT_FILE,
-        parse_dates=["date"],
+        parse_dates=[
+            "date",
+        ],
     )
 
     df = (
-        df.sort_values("date")
-        .reset_index(drop=True)
+        df.sort_values(
+            "date"
+        )
+        .reset_index(
+            drop=True
+        )
     )
+
+    if TARGET_COLUMN not in df.columns:
+        raise ValueError(
+            f"Target not found: {TARGET_COLUMN}"
+        )
+
+    if df["date"].duplicated().any():
+        raise ValueError(
+            "Duplicate monthly dates found"
+        )
 
     prediction_rows = []
     order_rows = []
@@ -252,44 +275,64 @@ def main():
         print()
         print("=" * 80)
         print(
-            f"TRAINING WINDOW: {window_years} YEARS"
+            f"TRAINING WINDOW: "
+            f"{window_years} YEARS"
         )
         print("=" * 80)
 
         for horizon in HORIZONS:
             valid_origins = []
 
-            for _, row in df.iterrows():
+            for index, row in df.iterrows():
                 origin_date = row[
                     "date"
                 ]
 
-                if origin_date < BACKTEST_START:
+                if (
+                    origin_date
+                    < BACKTEST_START
+                ):
                     continue
 
-                target_date = (
-                    origin_date
-                    + pd.offsets.MonthEnd(
-                        horizon
-                    )
+                target_index = (
+                    index
+                    + horizon
                 )
 
-                if target_date > df[
-                    "date"
-                ].max():
+                if (
+                    target_index
+                    >= len(df)
+                ):
+                    continue
+
+                if pd.isna(
+                    df.loc[
+                        target_index,
+                        TARGET_COLUMN,
+                    ]
+                ):
                     continue
 
                 valid_origins.append(
-                    origin_date
+                    (
+                        index,
+                        origin_date,
+                        target_index,
+                    )
                 )
 
             print()
             print(
-                f"[INFO] H{horizon}: "
-                f"{len(valid_origins)} backtest origins"
+                f"[INFO] H{horizon:02d}: "
+                f"{len(valid_origins)} "
+                "backtest origins"
             )
 
-            for index, origin_date in enumerate(
+            for counter, (
+                origin_index,
+                origin_date,
+                target_index,
+            ) in enumerate(
                 valid_origins,
                 start=1,
             ):
@@ -298,7 +341,7 @@ def main():
                     - pd.DateOffset(
                         years=window_years
                     )
-                    + pd.offsets.MonthEnd(1)
+                    + pd.offsets.MonthEnd(0)
                 )
 
                 training = df[
@@ -315,32 +358,63 @@ def main():
                         "date",
                         TARGET_COLUMN,
                     ]
-                ].dropna().copy()
+                ].copy()
+
+                training = (
+                    training.dropna(
+                        subset=[
+                            TARGET_COLUMN
+                        ]
+                    )
+                )
 
                 if len(training) < 36:
                     continue
 
-                series = (
-                    training[
+                y_train = (
+                    training
+                    .set_index(
+                        "date"
+                    )[
                         TARGET_COLUMN
                     ]
                     .astype(float)
                 )
 
+                # Give statsmodels a supported
+                # regular monthly index.
+                y_train.index = (
+                    pd.DatetimeIndex(
+                        y_train.index
+                    )
+                    .to_period("M")
+                    .to_timestamp("M")
+                )
+
+                y_train = y_train.asfreq(
+                    "ME"
+                )
+
+                if y_train.isna().any():
+                    raise RuntimeError(
+                        "Unexpected missing target "
+                        "inside ARIMA training window"
+                    )
+
                 (
                     model_result,
                     best_order,
-                    best_trend,
                     best_aic,
-                ) = select_best_arima(
-                    series
+                ) = fit_best_arima(
+                    y_train
                 )
 
                 forecast = (
                     model_result
-                    .forecast(
+                    .get_forecast(
                         steps=horizon
                     )
+                    .predicted_mean
                 )
 
                 prediction = float(
@@ -350,35 +424,28 @@ def main():
                 )
 
                 origin_price = float(
-                    training[
-                        TARGET_COLUMN
-                    ].iloc[-1]
+                    df.loc[
+                        origin_index,
+                        TARGET_COLUMN,
+                    ]
                 )
-
-                target_date = (
-                    origin_date
-                    + pd.offsets.MonthEnd(
-                        horizon
-                    )
-                )
-
-                target_row = df[
-                    df["date"]
-                    == target_date
-                ]
-
-                if target_row.empty:
-                    continue
 
                 actual = float(
-                    target_row[
-                        TARGET_COLUMN
-                    ].iloc[0]
+                    df.loc[
+                        target_index,
+                        TARGET_COLUMN,
+                    ]
                 )
+
+                target_date = df.loc[
+                    target_index,
+                    "date",
+                ]
 
                 prediction_rows.append(
                     {
-                        "model": "arima",
+                        "model":
+                            "arima",
                         "training_window_years":
                             window_years,
                         "horizon":
@@ -388,11 +455,13 @@ def main():
                         "target_date":
                             target_date,
                         "training_rows":
-                            len(training),
+                            len(
+                                training
+                            ),
                         "arima_order":
-                            str(best_order),
-                        "trend":
-                            best_trend,
+                            str(
+                                best_order
+                            ),
                         "aic":
                             best_aic,
                         "origin_price":
@@ -402,7 +471,8 @@ def main():
                         "prediction":
                             prediction,
                         "error":
-                            prediction - actual,
+                            prediction
+                            - actual,
                     }
                 )
 
@@ -415,29 +485,34 @@ def main():
                         "origin_date":
                             origin_date,
                         "arima_order":
-                            str(best_order),
-                        "trend":
-                            best_trend,
+                            str(
+                                best_order
+                            ),
                         "aic":
                             best_aic,
                     }
                 )
 
                 if (
-                    index == 1
-                    or index % 5 == 0
-                    or index
+                    counter == 1
+                    or counter % 5 == 0
+                    or counter
                     == len(
                         valid_origins
                     )
                 ):
                     print(
-                        f"  H{horizon} "
-                        f"{index}/{len(valid_origins)} "
-                        f"| origin={origin_date.date()} "
-                        f"| train={len(training)} "
-                        f"| order={best_order} "
-                        f"| trend={best_trend}"
+                        f"  H{horizon:02d} "
+                        f"{counter}/"
+                        f"{len(valid_origins)} "
+                        f"| origin="
+                        f"{origin_date.date()} "
+                        f"| train="
+                        f"{len(training)} "
+                        f"| steps="
+                        f"{horizon} "
+                        f"| order="
+                        f"{best_order}"
                     )
 
     predictions = pd.DataFrame(
@@ -460,22 +535,31 @@ def main():
             "horizon",
         ]
     ):
-        actual = group[
-            "actual"
-        ].to_numpy(
-            dtype=float
+        actual = (
+            group[
+                "actual"
+            ]
+            .to_numpy(
+                dtype=float
+            )
         )
 
-        predicted = group[
-            "prediction"
-        ].to_numpy(
-            dtype=float
+        predicted = (
+            group[
+                "prediction"
+            ]
+            .to_numpy(
+                dtype=float
+            )
         )
 
-        origin = group[
-            "origin_price"
-        ].to_numpy(
-            dtype=float
+        origin = (
+            group[
+                "origin_price"
+            ]
+            .to_numpy(
+                dtype=float
+            )
         )
 
         metric_rows.append(
@@ -534,10 +618,8 @@ def main():
         )
     )
 
-    order_usage = (
-        pd.DataFrame(
-            order_rows
-        )
+    orders = pd.DataFrame(
+        order_rows
     )
 
     predictions.to_csv(
@@ -550,7 +632,7 @@ def main():
         index=False,
     )
 
-    order_usage.to_csv(
+    orders.to_csv(
         ORDER_USAGE_FILE,
         index=False,
     )
@@ -562,7 +644,7 @@ def main():
 
     print()
     print("=" * 80)
-    print("ARIMA RESULTS")
+    print("ARIMA H1-H12 RESULTS")
     print("=" * 80)
     print()
 
@@ -573,47 +655,9 @@ def main():
     )
 
     print()
-    print("MOST USED ARIMA SPECIFICATIONS")
-    print()
-
-    usage = (
-        order_usage
-        .groupby(
-            [
-                "training_window_years",
-                "horizon",
-                "arima_order",
-                "trend",
-            ],
-            dropna=False,
-        )
-        .size()
-        .reset_index(
-            name="count"
-        )
-        .sort_values(
-            [
-                "training_window_years",
-                "horizon",
-                "count",
-            ],
-            ascending=[
-                True,
-                True,
-                False,
-            ],
-        )
-    )
-
     print(
-        usage.to_string(
-            index=False
-        )
-    )
-
-    print()
-    print(
-        f"[INFO] Runtime seconds: {elapsed:.2f}"
+        f"[INFO] Runtime seconds: "
+        f"{elapsed:.2f}"
     )
 
     print()
