@@ -6,7 +6,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 import re
-from src.utils.paths import MACRO_RAW_DIR
+from src.utils.paths import PROJECT_ROOT, MACRO_RAW_DIR
 OUTPUT_FILE = (
     MACRO_RAW_DIR
     / "global_macro_monthly.csv"

@@ -1,5 +1,7 @@
-source_name,file_path,category,frequency,required
-Chile_IPSA,data/raw/equities/Chile_IPSA_Historical_Data.csv,equities,monthly,true
-China_CSI300,data/raw/equities/China_CSI300_Historical_Data.csv,equities,monthly,true
-Poland_WIG20,data/raw/equities/Poland_WIG20_Historical_Data.csv,equities,monthly,true
-Baltic_Dry_Index,data/raw/shipping/baltic_dry_index_daily.csv,shipping,monthly,true
+source_name,file_path,category,source_mode,frequency,required,ingestion_script,official_source,source_url,notes
+Baltic_Dry_Index,data/raw/shipping/Baltic Dry Index Geçmiş Verileri.csv,shipping,monthly_manual,monthly,true,src/ingestion/ingest_bdi.py,Investing.com,https://www.investing.com/indices/baltic-dry-historical-data,Download/update the historical CSV before monthly production run
+Chile_IPSA,data/raw/equities/Chile_IPSA_Historical_Data.csv,equities,monthly_manual,monthly,true,src/ingestion/ingest_country_stock_indices.py,Investing.com,https://www.investing.com/indices/ipsa-historical-data,Append or replace with latest historical data before monthly production run
+China_CSI300,data/raw/equities/China_CSI300_Historical_Data.csv,equities,monthly_manual,monthly,true,src/ingestion/ingest_country_stock_indices.py,Investing.com,https://www.investing.com/indices/csi300-historical-data,Append or replace with latest historical data before monthly production run
+Poland_WIG20,data/raw/equities/Poland_WIG20_Historical_Data.csv,equities,monthly_manual,monthly,true,src/ingestion/ingest_country_stock_indices.py,Investing.com,https://www.investing.com/indices/wig-20-historical-data,Append or replace with latest historical data before monthly production run
+Chile_COCHILCO_Yearbook,data/source/cochilco/chile_cochilco_yearbook_2005_2024.xlsx,mining,periodic_manual,annual,true,src/ingestion/ingest_chile_cochilco.py,COCHILCO,https://www.cochilco.cl/web/anuario-de-estadisticas-del-cobre-y-otros-minerales/,Replace only when a newer official COCHILCO yearbook is published
+Peru_MINEM_Mining_Employment,data/source/peru/peru_mining_employment_2020_2026.xlsx,mining,periodic_manual,periodic,true,src/ingestion/ingest_peru_copper_mining.py,Ministerio de Energia y Minas del Peru,https://www.gob.pe/institucion/minem/informes-publicaciones/4291678-empleo-minero,Replace when MINEM publishes a newer mining employment workbook

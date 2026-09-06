@@ -108,9 +108,8 @@ def extract_year_series(
 
         row_text = normalize_text(
             " | ".join(
-                df.iloc[i]
-                .astype(str)
-                .tolist()
+                str(value)
+                for value in df.iloc[i].tolist()
             )
         )
 
@@ -123,7 +122,7 @@ def extract_year_series(
             f"Row not found: {row_keyword} "
             f"in {sheet_name}"
         )
-
+        
     # Hedef satirin ustunde yil satirini ara
     year_row = None
 

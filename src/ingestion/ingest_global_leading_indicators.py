@@ -1,13 +1,16 @@
-from pathlib import Path
 from io import StringIO
 
 import pandas as pd
 import requests
+
 from src.utils.paths import MACRO_RAW_DIR
+
+
 OUTPUT_FILE = (
     MACRO_RAW_DIR
     / "global_leading_indicators_monthly.csv"
 )
+
 OECD_G20_CLI_URL = (
     "https://sdmx.oecd.org/public/rest/data/"
     "OECD.SDD.STES,DSD_STES@DF_CLI,4.1/"
@@ -136,7 +139,7 @@ def main():
         g20_df
     )
 
-    RAW_DIR.mkdir(
+    OUTPUT_FILE.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
@@ -148,6 +151,7 @@ def main():
     )
 
     print()
+
     print(
         "[OK] Saved:",
         OUTPUT_FILE,
@@ -181,6 +185,7 @@ def main():
     )
 
     print()
+
     print(
         "[DONE] Global leading indicators ingestion completed"
     )

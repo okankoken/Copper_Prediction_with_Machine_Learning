@@ -30,3 +30,9 @@ jupyterlab
 ipykernel
 
 scipy
+
+xlrd>=2.0.1
+
+pymupdf
+
+evds

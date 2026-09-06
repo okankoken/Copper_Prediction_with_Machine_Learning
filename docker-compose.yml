@@ -81,6 +81,7 @@ services:
       MLFLOW_S3_ENDPOINT_URL: http://minio:9000
       AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
       AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow:5000,localhost:*,127.0.0.1:5000"
 
     ports:
       - "5000:5000"
@@ -97,7 +98,12 @@ services:
 
 
   airflow-init:
-    image: apache/airflow:${AIRFLOW_VERSION}
+    build:
+      context: .
+      dockerfile: docker/airflow.Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
+
     container_name: copper_airflow_init
 
     depends_on:
@@ -112,6 +118,16 @@ services:
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
 
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_USERNAME}:admin
+      
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+      
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
+
+      PYTHONPATH: /opt/airflow
+
+      MLFLOW_TRACKING_URI: http://mlflow:5000
 
     user: "${AIRFLOW_UID}:0"
 
@@ -121,6 +137,7 @@ services:
       - ./src:/opt/airflow/src
       - ./config:/opt/airflow/config
       - ./data:/opt/airflow/data
+      - ./.env:/opt/airflow/.env:ro
 
     command: >
       bash -c "
@@ -129,7 +146,12 @@ services:
 
 
   airflow-api-server:
-    image: apache/airflow:${AIRFLOW_VERSION}
+    build:
+      context: .
+      dockerfile: docker/airflow.Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
+
     container_name: copper_airflow_api
     restart: unless-stopped
 
@@ -145,6 +167,16 @@ services:
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
 
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_USERNAME}:admin
+      
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+      
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
+
+      PYTHONPATH: /opt/airflow
+
+      MLFLOW_TRACKING_URI: http://mlflow:5000
 
     user: "${AIRFLOW_UID}:0"
 
@@ -157,12 +189,18 @@ services:
       - ./src:/opt/airflow/src
       - ./config:/opt/airflow/config
       - ./data:/opt/airflow/data
+      - ./.env:/opt/airflow/.env:ro
 
     command: api-server
 
 
   airflow-scheduler:
-    image: apache/airflow:${AIRFLOW_VERSION}
+    build:
+      context: .
+      dockerfile: docker/airflow.Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
+
     container_name: copper_airflow_scheduler
     restart: unless-stopped
 
@@ -178,6 +216,16 @@ services:
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
 
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_USERNAME}:admin
+      
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+      
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
+
+      PYTHONPATH: /opt/airflow
+
+      MLFLOW_TRACKING_URI: http://mlflow:5000
 
     user: "${AIRFLOW_UID}:0"
 
@@ -187,12 +235,18 @@ services:
       - ./src:/opt/airflow/src
       - ./config:/opt/airflow/config
       - ./data:/opt/airflow/data
+      - ./.env:/opt/airflow/.env:ro
 
     command: scheduler
 
 
   airflow-dag-processor:
-    image: apache/airflow:${AIRFLOW_VERSION}
+    build:
+      context: .
+      dockerfile: docker/airflow.Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
+
     container_name: copper_airflow_dag_processor
     restart: unless-stopped
 
@@ -208,6 +262,16 @@ services:
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
 
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: ${AIRFLOW_USERNAME}:admin
+      
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
+      
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
+
+      PYTHONPATH: /opt/airflow
+
+      MLFLOW_TRACKING_URI: http://mlflow:5000
 
     user: "${AIRFLOW_UID}:0"
 
@@ -217,6 +281,7 @@ services:
       - ./src:/opt/airflow/src
       - ./config:/opt/airflow/config
       - ./data:/opt/airflow/data
+      - ./.env:/opt/airflow/.env:ro
 
     command: dag-processor
 

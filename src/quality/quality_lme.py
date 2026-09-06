@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 """
 Copper project data quality module.
 
@@ -16,6 +17,8 @@ Sadece kalite problemlerini raporlar.
 """
 
 from __future__ import annotations
+
+import sys
 
 from pathlib import Path
 
@@ -184,7 +187,14 @@ def validate_lme_data(
     summary = []
     anomalies = []
 
-    today = pd.Timestamp.today().normalize()
+    reference_month = get_last_completed_month()
+
+    reference_date = (
+        reference_month
+        .to_timestamp(how="end")
+        .normalize()
+    )
+
 
     # -------------------------
     # Basic dataset information
@@ -392,30 +402,48 @@ def validate_lme_data(
     # -------------------------
     # Data freshness
     # -------------------------
-
+    
     if pd.notna(last_date):
-
-        freshness_days = (
-            today - last_date.normalize()
-        ).days
-
-        if freshness_days <= MAX_FRESHNESS_DAYS_PASS:
-            freshness_status = "PASS"
-
-        elif freshness_days <= MAX_FRESHNESS_DAYS_WARNING:
-            freshness_status = "WARNING"
-
-        else:
+    
+        completed_period_dates = df.loc[
+            df["date"] <= reference_date,
+            "date",
+        ]
+    
+        latest_completed_period_date = (
+            completed_period_dates.max()
+        )
+    
+        if pd.isna(latest_completed_period_date):
+    
+            freshness_days = None
             freshness_status = "FAIL"
-
+    
+        else:
+    
+            freshness_days = (
+                reference_date
+                - latest_completed_period_date.normalize()
+            ).days
+    
+            if freshness_days <= MAX_FRESHNESS_DAYS_PASS:
+                freshness_status = "PASS"
+    
+            elif freshness_days <= MAX_FRESHNESS_DAYS_WARNING:
+                freshness_status = "WARNING"
+    
+            else:
+                freshness_status = "FAIL"
+    
         add_summary(
             summary,
             "data_freshness_days",
             freshness_status,
             freshness_days,
             (
-                "Calendar days between today "
-                "and latest LME observation"
+                "Calendar days between last completed "
+                "month-end and latest LME observation "
+                "within the completed period"
             ),
         )
 
@@ -830,6 +858,9 @@ def main():
         print(
             "[RESULT] Overall status: FAIL"
         )
+
+    if fail_count > 0:
+        sys.exit(1)
 
     elif warning_count > 0:
         print(

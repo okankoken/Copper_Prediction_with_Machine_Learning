@@ -240,6 +240,7 @@ month,peru_usd_pen,peru_diesel_price_index,peru_industrial_electricity_tariff_in
 2014-11,2.925,104.0,111.0,,null_peru_formal_private_income_pen,
 2014-12,2.962,98.0,110.0,,null_peru_formal_private_income_pen,
 2026-07,3.4,119.0,129.0,,null_peru_formal_private_income_pen,
+2026-08,3.365,133.0,136.0,,null_peru_formal_private_income_pen,
 2026-03,3.447,115.0,123.0,4661.2,large_monthly_change_peru_diesel_price_index,0.3068181818181819
 2015-07,3.181,77.0,127.0,3658.9,large_monthly_change_peru_formal_private_income_pen,0.6692062043795621
 2015-08,3.238,77.0,129.0,2129.1,large_monthly_change_peru_formal_private_income_pen,0.4181038016890323

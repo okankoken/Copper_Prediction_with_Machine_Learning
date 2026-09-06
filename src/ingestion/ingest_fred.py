@@ -2,7 +2,10 @@ from pathlib import Path
 
 import pandas as pd
 import requests
-from src.utils.paths import MACRO_RAW_DIR
+
+from src.utils.paths import PROJECT_ROOT, MACRO_RAW_DIR
+
+
 OUTPUT_FILE = (
     MACRO_RAW_DIR
     / "fred_macro_monthly.csv"

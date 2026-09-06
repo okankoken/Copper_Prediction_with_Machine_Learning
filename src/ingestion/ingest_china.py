@@ -1,18 +1,8 @@
-from pathlib import Path
-
 import pandas as pd
 import requests
 
+from src.utils.paths import RAW_DIR
 
-PROJECT_ROOT = Path(
-    "/home/train/Copper_Prediction_with_Machine_Learning"
-)
-
-RAW_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-)
 
 BASE_API_URL = (
     "https://chinadata.live/api/v2/data"

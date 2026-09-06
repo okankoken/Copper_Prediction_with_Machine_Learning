@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 
 """
 FRED monthly data quality checks.
@@ -415,19 +416,21 @@ def main():
     )
 
     if fail_count > 0:
-
+    
         print(
             "[RESULT] Overall status: FAIL"
         )
-
+    
+        sys.exit(1)
+    
     elif warning_count > 0:
-
+    
         print(
             "[RESULT] Overall status: WARNING"
         )
-
+    
     else:
-
+    
         print(
             "[RESULT] Overall status: PASS"
         )

@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from src.utils.paths import MINING_RAW_DIR, QUALITY_DIR
-
+import sys
 
 
 
@@ -662,6 +662,9 @@ def main():
         f"[RESULT] Overall Status: "
         f"{overall_status}"
     )
+
+    if fail_count > 0:
+        sys.exit(1)
 
     print(
         f"\n[OK] Saved summary: "
