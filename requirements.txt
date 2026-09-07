@@ -35,4 +35,4 @@ xlrd>=2.0.1
 
 pymupdf
 
-evds
+evdsplotly
