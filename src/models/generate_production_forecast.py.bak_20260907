@@ -1462,34 +1462,6 @@ def main():
         ].iloc[0]
     )
 
-    forecast_origin = pd.Timestamp(
-        forecast_origin
-    ).normalize()
-
-    expected_forecast_origin = (
-        pd.Timestamp.today()
-        .normalize()
-        .replace(day=1)
-        - pd.Timedelta(days=1)
-    )
-
-    if (
-        forecast_origin
-        != expected_forecast_origin
-    ):
-        raise RuntimeError(
-            "Forecast origin validation failed. "
-            f"Expected last completed month end "
-            f"{expected_forecast_origin.date()}, "
-            f"but dataset ends at "
-            f"{forecast_origin.date()}."
-        )
-
-    print(
-        "[INFO] Forecast origin validation PASS: "
-        f"{forecast_origin.date()}"
-    )
-
     origin_price = float(
         production_row[
             ORIGIN_PRICE_COLUMN

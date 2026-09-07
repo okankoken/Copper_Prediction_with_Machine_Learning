@@ -1,7 +1,7 @@
 check,status,value,detail
-row_count,INFO,4722,Total number of daily observations
+row_count,INFO,4723,Total number of daily observations
 first_date,INFO,2008-01-02,First available LME observation
-last_date,INFO,2026-09-03,Latest available LME observation
+last_date,INFO,2026-09-04,Latest available LME observation
 invalid_dates,PASS,0,Dates that could not be parsed
 duplicate_dates,PASS,0,Duplicate daily dates
 null_cash_settlement_usd_per_ton,WARNING,3,Missing values in cash_settlement_usd_per_ton
