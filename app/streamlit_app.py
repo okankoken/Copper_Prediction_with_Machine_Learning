@@ -50,7 +50,7 @@ MASTER_FILE = (
 
 st.set_page_config(
     page_title="Copper Intelligence & Forecasting Center",
-    page_icon="\U0001F4CA",
+    page_icon="\U0001F4C8",
     layout="wide",
     initial_sidebar_state="expanded",
 )
