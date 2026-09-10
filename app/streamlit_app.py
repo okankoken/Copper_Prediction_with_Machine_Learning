@@ -1,17 +1,20 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-
-# =============================================================================
-# PATHS
-# =============================================================================
+from components.market_data_explorer import (
+    PLOTLY_CONFIG,
+    TARGET_COLUMN,
+    render_lead_lag_signal_lab,
+    render_market_data_explorer,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,59 +48,222 @@ MASTER_FILE = (
 )
 
 
-# =============================================================================
-# STREAMLIT CONFIG
-# =============================================================================
-
 st.set_page_config(
     page_title="Copper Intelligence & Forecasting Center",
-    page_icon="📈",
+    page_icon="\U0001F4CA",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 
-# =============================================================================
-# CSS
-# =============================================================================
-
 CUSTOM_CSS = """
 <style>
+
+:root {
+    --copper: #f59e0b;
+    --copper-soft: rgba(245, 158, 11, 0.18);
+    --cyan: #22d3ee;
+    --purple: #a78bfa;
+    --green: #34d399;
+    --red: #fb7185;
+    --panel: rgba(15, 23, 42, 0.72);
+    --border: rgba(148, 163, 184, 0.16);
+}
 
 html, body, [class*="css"] {
     font-family: Inter, Arial, sans-serif;
 }
 
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(
+            circle at 85% 5%,
+            rgba(245, 158, 11, 0.11),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 28% 15%,
+            rgba(34, 211, 238, 0.07),
+            transparent 30%
+        ),
+        #ffffff;
+}
+
 .block-container {
-    padding-top: 3.1rem;
+    padding-top: 3.2rem;
     padding-bottom: 3rem;
     max-width: 1850px;
 }
 
+/* Sidebar */
+
 [data-testid="stSidebar"] {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 310px;
+    max-width: 310px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #eef4f8 0%,
+            #f4f6f7 40%,
+            #fff7eb 100%
+        );
+
+    border-right:
+        1px solid rgba(
+            245,
+            158,
+            11,
+            0.25
+        );
 }
 
 [data-testid="stSidebarContent"] {
     padding-top: 2rem;
+    padding-bottom: 5.2rem;
 }
 
+/* Sidebar text */
+
+[data-testid="stSidebar"] * {
+    color: #263445;
+}
+
+/* Sidebar section separators */
+
+[data-testid="stSidebar"] hr {
+    border-color:
+        rgba(
+            71,
+            85,
+            105,
+            0.15
+        );
+}
+
+/* Sidebar radio container */
+
+[data-testid="stSidebar"]
+div[role="radiogroup"] {
+    gap: 0.35rem;
+}
+
+/* Sidebar radio options */
+
+[data-testid="stSidebar"]
+div[role="radiogroup"] label {
+    border-radius: 10px;
+    padding: 7px 8px;
+    transition:
+        background 0.2s ease;
+}
+
+[data-testid="stSidebar"]
+div[role="radiogroup"] label:hover {
+    background:
+        rgba(
+            245,
+            158,
+            11,
+            0.10
+        );
+}
+
+/* Sidebar code boxes */
+
+[data-testid="stSidebar"]
+[data-testid="stCode"] {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.70
+        );
+
+    border:
+        1px solid
+        rgba(
+            148,
+            163,
+            184,
+            0.20
+        );
+
+    border-radius: 10px;
+}
+
+/* Fixed disclaimer at the bottom of the sidebar */
+
+.sidebar-disclaimer {
+    position: fixed;
+    left: 14px;
+    bottom: 12px;
+    width: 278px;
+    z-index: 9999;
+
+    padding: 10px 12px;
+
+    border:
+        1px solid
+        rgba(
+            148,
+            163,
+            184,
+            0.18
+        );
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    backdrop-filter: blur(8px);
+
+    font-size: 0.70rem;
+    line-height: 1.35;
+    color: rgba(71, 85, 105, 0.72);
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            15,
+            23,
+            42,
+            0.05
+        );
+}
+
+/* Main title */
+
 .main-title {
-    font-size: 2.55rem;
+    font-size: 2.65rem;
     font-weight: 850;
-    letter-spacing: -0.035em;
-    line-height: 1.25;
-    margin-top: 0.25rem;
-    margin-bottom: 0.15rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.1rem;
-    overflow: visible;
+    letter-spacing: -0.04em;
+    line-height: 1.22;
+    margin-top: 0.3rem;
+    margin-bottom: 0.18rem;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f59e0b,
+            #fbbf24,
+            #0891b2
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .main-subtitle {
     font-size: 1rem;
-    opacity: 0.66;
+    opacity: 0.68;
     margin-bottom: 1.6rem;
 }
 
@@ -107,17 +273,145 @@ html, body, [class*="css"] {
     margin-bottom: 0.75rem;
 }
 
+.page-hero {
+    border:
+        1px solid
+        rgba(
+            148,
+            163,
+            184,
+            0.16
+        );
+
+    border-radius: 24px;
+    padding: 24px 28px;
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 18px 55px
+        rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+}
+
+.market-hero {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(
+                34,
+                211,
+                238,
+                0.10
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0.90
+            ) 48%,
+            rgba(
+                245,
+                158,
+                11,
+                0.14
+            )
+        );
+}
+
+.signal-hero {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(
+                167,
+                139,
+                250,
+                0.12
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0.90
+            ) 50%,
+            rgba(
+                245,
+                158,
+                11,
+                0.14
+            )
+        );
+}
+
+
+.hero-kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    font-weight: 800;
+    color: #d97706;
+    margin-bottom: 7px;
+}
+
+.hero-title {
+    font-size: 2rem;
+    font-weight: 850;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.hero-copy {
+    opacity: 0.70;
+    max-width: 850px;
+    line-height: 1.6;
+}
+
+/* KPI cards */
+
 .kpi-card {
-    border: 1px solid rgba(120, 120, 120, 0.20);
+    border:
+        1px solid
+        rgba(
+            148,
+            163,
+            184,
+            0.22
+        );
+
     border-radius: 18px;
     padding: 17px 19px 15px 19px;
+
     background:
         linear-gradient(
             145deg,
-            rgba(120, 120, 120, 0.035),
-            rgba(120, 120, 120, 0.010)
+            rgba(
+                241,
+                245,
+                249,
+                0.96
+            ),
+            rgba(
+                255,
+                247,
+                237,
+                0.78
+            )
         );
+
     min-height: 125px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            15,
+            23,
+            42,
+            0.07
+        );
 }
 
 .kpi-label {
@@ -162,10 +456,34 @@ html, body, [class*="css"] {
 }
 
 div[data-testid="stMetric"] {
-    border: 1px solid rgba(120, 120, 120, 0.18);
+    border:
+        1px solid
+        rgba(
+            148,
+            163,
+            184,
+            0.22
+        );
+
     border-radius: 16px;
     padding: 15px 17px;
-    background: rgba(120, 120, 120, 0.025);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                241,
+                245,
+                249,
+                0.92
+            ),
+            rgba(
+                255,
+                247,
+                237,
+                0.72
+            )
+        );
 }
 
 div[data-testid="stMetricValue"] {
@@ -200,145 +518,10 @@ st.markdown(
 )
 
 
-# =============================================================================
-# PLOTLY CONFIG
-# =============================================================================
-
-PLOTLY_CONFIG = {
-    "displayModeBar": True,
-    "scrollZoom": True,
-    "displaylogo": False,
-    "responsive": True,
-    "modeBarButtonsToAdd": [
-        "drawline",
-        "drawrect",
-        "eraseshape",
-    ],
-    "toImageButtonOptions": {
-        "format": "png",
-        "filename": "copper_intelligence_chart",
-        "scale": 2,
-    },
-}
-
-
-# =============================================================================
-# CATEGORY RULES
-# =============================================================================
-
-CATEGORY_RULES: Dict[str, List[str]] = {
-    "Copper Price & Inventory": [
-        "cash_settlement",
-        "copper_stock",
-        "copper",
-        "lme",
-    ],
-    "Other Metals": [
-        "aluminum",
-        "aluminium",
-        "lead",
-        "nickel",
-        "tin",
-        "zinc",
-        "gold",
-        "silver",
-        "metal",
-        "shfe",
-    ],
-    "Macro & Rates": [
-        "fed",
-        "rate",
-        "yield",
-        "treasury",
-        "cpi",
-        "inflation",
-        "ppi",
-        "m2",
-        "money",
-        "gdp",
-        "gfcf",
-        "pmi",
-        "industrial",
-        "cli",
-        "unemployment",
-    ],
-    "China": [
-        "china",
-        "csi",
-        "shanghai",
-    ],
-    "FX & Financial Markets": [
-        "dxy",
-        "dollar",
-        "eurusd",
-        "fx",
-        "vix",
-        "equity",
-        "stock",
-        "index",
-        "ipsa",
-        "wig20",
-        "csi300",
-        "sp500",
-        "tsx",
-    ],
-    "Energy": [
-        "oil",
-        "brent",
-        "wti",
-        "gas",
-        "energy",
-        "electricity",
-        "coal",
-        "fuel",
-    ],
-    "Shipping & Logistics": [
-        "baltic",
-        "bdi",
-        "shipping",
-        "freight",
-        "port",
-        "dry_bulk",
-        "portcalls",
-    ],
-    "Risk & Policy": [
-        "risk",
-        "gpr",
-        "geopolitical",
-        "uncertainty",
-        "policy",
-        "epu",
-    ],
-    "Copper Supply": [
-        "mine",
-        "mining",
-        "production",
-        "reserve",
-        "inventory",
-        "icsg",
-        "cochilco",
-        "peru",
-        "chile",
-        "ore_grade",
-    ],
-    "Demand & Energy Transition": [
-        "ev",
-        "vehicle",
-        "renewable",
-        "solar",
-        "wind",
-        "transition",
-        "demand",
-    ],
-}
-
-
-# =============================================================================
-# DATA LOADERS
-# =============================================================================
-
 @st.cache_data(show_spinner=False)
-def load_csv(path: Path) -> pd.DataFrame:
+def load_csv(
+    path: Path,
+) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
 
@@ -377,326 +560,6 @@ def prepare_forecast(
     )
 
 
-forecast_df = prepare_forecast(
-    load_csv(
-        FORECAST_FILE
-    )
-)
-
-metrics_df = load_csv(
-    METRICS_FILE
-)
-
-model_details_df = load_csv(
-    MODEL_DETAILS_FILE
-)
-
-master_df = load_csv(
-    MASTER_FILE
-)
-
-
-# =============================================================================
-# HELPERS
-# =============================================================================
-
-def format_price(
-    value: float,
-) -> str:
-    if pd.isna(value):
-        return "N/A"
-
-    return f"${value:,.0f}"
-
-
-def pretty_name(
-    column_name: str,
-) -> str:
-    custom_names = {
-        "cash_settlement_usd_per_ton":
-            "LME Copper Cash Settlement",
-        "copper_stock_ton":
-            "LME Copper Stock",
-        "china_refined_copper_production_ton":
-            "China Refined Copper Production",
-        "world_copper_mine_production_ton":
-            "World Copper Mine Production",
-        "world_copper_refinery_production_ton":
-            "World Copper Refinery Production",
-        "world_copper_reserves_ton":
-            "World Copper Reserves",
-        "chile_copper_production_ton":
-            "Chile Copper Production",
-        "peru_copper_production_ton":
-            "Peru Copper Production",
-    }
-
-    if column_name in custom_names:
-        return custom_names[
-            column_name
-        ]
-
-    return (
-        str(column_name)
-        .replace("_", " ")
-        .strip()
-        .title()
-    )
-
-
-def infer_unit(
-    column_name: str,
-) -> str:
-    name = str(
-        column_name
-    ).lower()
-
-    if (
-        "usd_per_ton" in name
-        or "usd_per_tonne" in name
-        or "usd_ton" in name
-    ):
-        return "USD / ton"
-
-    if (
-        "pct" in name
-        or "percent" in name
-        or "percentage" in name
-    ):
-        return "%"
-
-    if "yield" in name:
-        return "%"
-
-    if "rate" in name:
-        return "% / rate"
-
-    if "index" in name:
-        return "Index"
-
-    if (
-        "ton" in name
-        or "tonne" in name
-    ):
-        return "Ton"
-
-    if "tj" in name:
-        return "TJ"
-
-    if "usd" in name:
-        return "USD"
-
-    if (
-        "count" in name
-        or "employment" in name
-        or "sales" in name
-        or "portcalls" in name
-    ):
-        return "Count"
-
-    return "Value"
-
-
-def find_date_column(
-    df: pd.DataFrame,
-) -> str | None:
-    candidates = [
-        "date",
-        "month",
-        "period",
-        "timestamp",
-    ]
-
-    lowered = {
-        str(column).lower(): column
-        for column in df.columns
-    }
-
-    for candidate in candidates:
-        if candidate in lowered:
-            return lowered[
-                candidate
-            ]
-
-    return None
-
-
-def find_copper_target_column(
-    df: pd.DataFrame,
-) -> str | None:
-    preferred = [
-        "cash_settlement_usd_per_ton",
-        "lme_cash_monthly_usd",
-        "copper_usd_per_ton",
-        "lme_cash_usd_per_ton",
-    ]
-
-    for column in preferred:
-        if column in df.columns:
-            return column
-
-    for column in df.columns:
-        name = str(
-            column
-        ).lower()
-
-        if (
-            "cash" in name
-            and "settlement" in name
-            and "usd" in name
-            and "ton" in name
-        ):
-            return column
-
-    return None
-
-
-def get_numeric_columns(
-    df: pd.DataFrame,
-    date_column: str | None,
-) -> List[str]:
-    columns = []
-
-    for column in df.columns:
-        if column == date_column:
-            continue
-
-        numeric = pd.to_numeric(
-            df[column],
-            errors="coerce",
-        )
-
-        if numeric.notna().sum() >= 3:
-            columns.append(
-                column
-            )
-
-    return sorted(
-        columns
-    )
-
-
-def build_categories(
-    numeric_columns: List[str],
-) -> Dict[str, List[str]]:
-    categories: Dict[str, List[str]] = {
-        "All Numeric Variables":
-            numeric_columns,
-    }
-
-    assigned = set()
-
-    for category, keywords in CATEGORY_RULES.items():
-        matches = []
-
-        for column in numeric_columns:
-            lowered = str(
-                column
-            ).lower()
-
-            if any(
-                keyword in lowered
-                for keyword in keywords
-            ):
-                matches.append(
-                    column
-                )
-
-                assigned.add(
-                    column
-                )
-
-        if matches:
-            categories[
-                category
-            ] = sorted(
-                set(matches)
-            )
-
-    remaining = [
-        column
-        for column in numeric_columns
-        if column not in assigned
-    ]
-
-    if remaining:
-        categories[
-            "Other Variables"
-        ] = remaining
-
-    return categories
-
-
-def calculate_change(
-    series: pd.Series,
-    periods: int,
-) -> float:
-    clean = (
-        pd.to_numeric(
-            series,
-            errors="coerce",
-        )
-        .dropna()
-    )
-
-    if len(clean) <= periods:
-        return np.nan
-
-    previous = clean.iloc[
-        -(periods + 1)
-    ]
-
-    latest = clean.iloc[-1]
-
-    if previous == 0:
-        return np.nan
-
-    return (
-        (
-            latest
-            / previous
-        )
-        - 1
-    ) * 100
-
-
-def filter_period(
-    df: pd.DataFrame,
-    date_column: str,
-    period: str,
-) -> pd.DataFrame:
-    if period == "All":
-        return df.copy()
-
-    year_map = {
-        "1Y": 1,
-        "3Y": 3,
-        "5Y": 5,
-        "10Y": 10,
-    }
-
-    years = year_map[
-        period
-    ]
-
-    latest = df[
-        date_column
-    ].max()
-
-    cutoff = (
-        latest
-        - pd.DateOffset(
-            years=years
-        )
-    )
-
-    return df.loc[
-        df[
-            date_column
-        ] >= cutoff
-    ].copy()
-
-
 def render_card(
     label: str,
     value: str,
@@ -714,22 +577,14 @@ def render_card(
             )
 
             if numeric_delta > 0:
-                css_class = (
-                    "kpi-positive"
-                )
+                css_class = "kpi-positive"
             elif numeric_delta < 0:
-                css_class = (
-                    "kpi-negative"
-                )
+                css_class = "kpi-negative"
             else:
-                css_class = (
-                    "kpi-neutral"
-                )
+                css_class = "kpi-neutral"
 
         except Exception:
-            css_class = (
-                "kpi-neutral"
-            )
+            css_class = "kpi-neutral"
 
         delta_html = (
             f'<div class="{css_class}">'
@@ -748,12 +603,8 @@ def render_card(
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-label">
-                {label}
-            </div>
-            <div class="kpi-value">
-                {value}
-            </div>
+            <div class="kpi-label">{label}</div>
+            <div class="kpi-value">{value}</div>
             {unit_html}
             {delta_html}
         </div>
@@ -762,14 +613,13 @@ def render_card(
     )
 
 
-def render_plot(
-    fig: go.Figure,
-) -> None:
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config=PLOTLY_CONFIG,
-    )
+def format_price(
+    value: float,
+) -> str:
+    if pd.isna(value):
+        return "N/A"
+
+    return f"${value:,.0f}"
 
 
 def configure_time_axis(
@@ -777,6 +627,8 @@ def configure_time_axis(
     show_range_slider: bool = True,
 ) -> None:
     fig.update_xaxes(
+        showgrid=True,
+        gridcolor="rgba(148,163,184,0.12)",
         showspikes=True,
         spikethickness=1,
         spikedash="dot",
@@ -824,6 +676,8 @@ def configure_time_axis(
     )
 
     fig.update_yaxes(
+        showgrid=True,
+        gridcolor="rgba(148,163,184,0.12)",
         showspikes=True,
         spikethickness=1,
         spikedash="dot",
@@ -846,12 +700,25 @@ def configure_top_legend(
     )
 
 
-# =============================================================================
-# SIDEBAR
-# =============================================================================
+forecast_df = prepare_forecast(
+    load_csv(FORECAST_FILE)
+)
+
+metrics_df = load_csv(
+    METRICS_FILE
+)
+
+model_details_df = load_csv(
+    MODEL_DETAILS_FILE
+)
+
+master_df = load_csv(
+    MASTER_FILE
+)
+
 
 st.sidebar.markdown(
-    "## Copper Intelligence"
+    "## \U0001F7E0 Copper Intelligence"
 )
 
 st.sidebar.caption(
@@ -861,16 +728,14 @@ st.sidebar.caption(
 page = st.sidebar.radio(
     "Navigation",
     [
-        "Executive Overview",
-        "Forecast Center",
-        "Market Data Explorer",
+        "\U0001F3E0 Executive Overview",
+        "\U0001F3AF Forecast Center",
+        "\U0001F310 Market Data Explorer",
+        "\U0001F9ED Lead-Lag Signals",
     ],
 )
 
-st.sidebar.divider()
-
 if not forecast_df.empty:
-
     origin = forecast_df[
         "forecast_origin"
     ].iloc[0]
@@ -880,16 +745,14 @@ if not forecast_df.empty:
     ].iloc[0]
 
     st.sidebar.markdown(
-        "### Production Status"
+        "### \U0001F7E2 Forecast Status"
     )
 
     st.sidebar.success(
         "Latest forecast available"
     )
 
-    if pd.notna(
-        origin
-    ):
+    if pd.notna(origin):
         st.sidebar.caption(
             "Forecast origin"
         )
@@ -900,9 +763,7 @@ if not forecast_df.empty:
             )
         )
 
-    if pd.notna(
-        generated_at
-    ):
+    if pd.notna(generated_at):
         st.sidebar.caption(
             "Generated at"
         )
@@ -914,9 +775,9 @@ if not forecast_df.empty:
         )
 
     st.sidebar.caption(
-        "Policy"
+        "Model Strategy"
     )
-
+    
     st.sidebar.code(
         str(
             forecast_df[
@@ -925,15 +786,20 @@ if not forecast_df.empty:
         )
     )
 
+    st.sidebar.markdown(
+        """
+        <div class="sidebar-disclaimer">
+            &#9888;&#65039; Analytical use only. Not investment advice.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 else:
     st.sidebar.error(
         "Forecast unavailable"
     )
 
-
-# =============================================================================
-# HEADER
-# =============================================================================
 
 st.markdown(
     '<div class="main-title">'
@@ -945,21 +811,16 @@ st.markdown(
 st.markdown(
     '<div class="main-subtitle">'
     'LME Copper | Machine Learning Production Forecast | '
-    'Market Intelligence | Data Analytics'
+    'Market Intelligence | Lead-Lag Analytics'
     '</div>',
     unsafe_allow_html=True,
 )
 
 
-# =============================================================================
-# GLOBAL FORECAST VALIDATION
-# =============================================================================
-
 if forecast_df.empty:
     st.error(
         "Production forecast file could not be loaded."
     )
-
     st.stop()
 
 
@@ -987,32 +848,14 @@ def horizon_row(
     return result.iloc[0]
 
 
-h1 = horizon_row(
-    1
-)
-
-h3 = horizon_row(
-    3
-)
-
-h6 = horizon_row(
-    6
-)
-
-h12 = horizon_row(
-    12
-)
+h1 = horizon_row(1)
+h3 = horizon_row(3)
+h6 = horizon_row(6)
+h12 = horizon_row(12)
 
 
-# =============================================================================
-# EXECUTIVE OVERVIEW
-# =============================================================================
-
-if page == "Executive Overview":
-
-    cards = st.columns(
-        5
-    )
+if page == "\U0001F3E0 Executive Overview":
+    cards = st.columns(5)
 
     with cards[0]:
         render_card(
@@ -1078,52 +921,37 @@ if page == "Executive Overview":
     )
 
     with left:
-
         st.markdown(
-            '<div class="section-title">'
-            'Historical Copper + Production Forecast'
-            '</div>',
-            unsafe_allow_html=True,
+            "### Historical Copper + Production Forecast"
         )
 
         fig = go.Figure()
 
-        date_column = find_date_column(
-            master_df
-        )
-
-        target_column = (
-            find_copper_target_column(
-                master_df
-            )
-        )
-
         if (
-            date_column
-            and target_column
+            not master_df.empty
+            and "date" in master_df.columns
+            and TARGET_COLUMN
+            in master_df.columns
         ):
-
             historical = master_df[
                 [
-                    date_column,
-                    target_column,
+                    "date",
+                    TARGET_COLUMN,
                 ]
             ].copy()
 
             historical[
-                date_column
+                "date"
             ] = pd.to_datetime(
-                historical[
-                    date_column
-                ],
+                historical["date"],
                 errors="coerce",
             )
 
             historical[
-                target_column
+                TARGET_COLUMN
             ] = pd.to_numeric(
                 historical[
-                    target_column
+                    TARGET_COLUMN
                 ],
                 errors="coerce",
             )
@@ -1131,23 +959,20 @@ if page == "Executive Overview":
             historical = (
                 historical
                 .dropna()
-                .sort_values(
-                    date_column
-                )
+                .sort_values("date")
             )
 
             fig.add_trace(
                 go.Scatter(
-                    x=historical[
-                        date_column
-                    ],
+                    x=historical["date"],
                     y=historical[
-                        target_column
+                        TARGET_COLUMN
                     ],
                     mode="lines",
                     name="Historical LME Copper",
                     line=dict(
-                        width=2.2,
+                        width=2.5,
+                        color="#22d3ee",
                     ),
                     hovertemplate=(
                         "<b>%{x|%b %Y}</b>"
@@ -1178,9 +1003,7 @@ if page == "Executive Overview":
                 "final_forecast_price_usd_per_ton": [
                     origin_price
                 ],
-                "horizon": [
-                    0
-                ],
+                "horizon": [0],
                 "production_expert": [
                     "Forecast Origin"
                 ],
@@ -1211,9 +1034,11 @@ if page == "Executive Overview":
                 line=dict(
                     width=3,
                     dash="dash",
+                    color="#f59e0b",
                 ),
                 marker=dict(
                     size=8,
+                    color="#f59e0b",
                 ),
                 customdata=np.column_stack(
                     [
@@ -1249,10 +1074,13 @@ if page == "Executive Overview":
             ].iloc[0],
             line_dash="dot",
             line_width=1.5,
+            line_color="#fbbf24",
         )
 
         fig.update_layout(
             height=650,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(
                 l=20,
                 r=20,
@@ -1270,21 +1098,17 @@ if page == "Executive Overview":
             show_range_slider=True,
         )
 
-        configure_top_legend(
-            fig
-        )
+        configure_top_legend(fig)
 
-        render_plot(
-            fig
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config=PLOTLY_CONFIG,
         )
 
     with right:
-
         st.markdown(
-            '<div class="section-title">'
-            'Forecast Intelligence'
-            '</div>',
-            unsafe_allow_html=True,
+            "### Forecast Intelligence"
         )
 
         max_row = forecast_df.loc[
@@ -1347,8 +1171,8 @@ if page == "Executive Overview":
 
         if low_horizons:
             text = ", ".join(
-                f"H{horizon}"
-                for horizon in low_horizons
+                f"H{value}"
+                for value in low_horizons
             )
 
             st.warning(
@@ -1363,10 +1187,7 @@ if page == "Executive Overview":
     st.divider()
 
     st.markdown(
-        '<div class="section-title">'
-        'Monthly Forecast Movement'
-        '</div>',
-        unsafe_allow_html=True,
+        "### Monthly Forecast Movement"
     )
 
     movement_fig = go.Figure()
@@ -1379,6 +1200,13 @@ if page == "Executive Overview":
             y=forecast_df[
                 "month_over_month_change_pct"
             ],
+            marker=dict(
+                color=forecast_df[
+                    "month_over_month_change_pct"
+                ],
+                colorscale="RdYlGn",
+                cmid=0,
+            ),
             customdata=np.column_stack(
                 [
                     forecast_df[
@@ -1410,42 +1238,51 @@ if page == "Executive Overview":
     movement_fig.add_hline(
         y=0,
         line_width=1,
+        line_color="rgba(148,163,184,0.6)",
     )
 
     movement_fig.update_layout(
-        height=380,
+        height=390,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
         margin=dict(
             l=20,
             r=20,
-            t=40,
+            t=35,
             b=20,
         ),
         xaxis_title="Forecast Month",
         yaxis_title="Month-over-month change %",
-        dragmode="zoom",
     )
 
-    render_plot(
-        movement_fig
+    movement_fig.update_xaxes(
+        gridcolor="rgba(148,163,184,0.10)",
+    )
+
+    movement_fig.update_yaxes(
+        gridcolor="rgba(148,163,184,0.10)",
+    )
+
+    st.plotly_chart(
+        movement_fig,
+        use_container_width=True,
+        config=PLOTLY_CONFIG,
     )
 
 
-# =============================================================================
-# FORECAST CENTER
-# =============================================================================
-
-elif page == "Forecast Center":
-
+elif page == "\U0001F3AF Forecast Center":
     st.markdown(
-        '<div class="section-title">'
-        'Forecast Analytics'
-        '</div>',
+        """
+        <div class="page-hero signal-hero">
+            <div class="hero-kicker">PRODUCTION FORECAST</div>
+            <div class="hero-title">Forecast Center</div>
+            <div class="hero-copy">
+                Inspect the H1-H12 production curve, final reconciled
+                forecasts, model diagnostics and backtest quality.
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
-    )
-
-    st.caption(
-        "Explore the current H1-H12 production forecast, "
-        "model diagnostics, errors, confidence, and raw forecast data."
     )
 
     top1, top2, top3, top4 = st.columns(
@@ -1487,7 +1324,6 @@ elif page == "Forecast Center":
     )
 
     with tab_curve:
-
         fig = go.Figure()
 
         fig.add_trace(
@@ -1502,9 +1338,11 @@ elif page == "Forecast Center":
                 name="Final Forecast",
                 line=dict(
                     width=3,
+                    color="#f59e0b",
                 ),
                 marker=dict(
                     size=9,
+                    color="#fbbf24",
                 ),
                 customdata=np.column_stack(
                     [
@@ -1552,11 +1390,14 @@ elif page == "Forecast Center":
         fig.add_hline(
             y=origin_price,
             line_dash="dot",
+            line_color="#22d3ee",
             annotation_text="Origin Price",
         )
 
         fig.update_layout(
             height=590,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
             hovermode="x unified",
             dragmode="zoom",
             margin=dict(
@@ -1574,16 +1415,13 @@ elif page == "Forecast Center":
             show_range_slider=True,
         )
 
-        configure_top_legend(
-            fig
-        )
-
-        render_plot(
-            fig
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config=PLOTLY_CONFIG,
         )
 
     with tab_table:
-
         forecast_table = forecast_df[
             [
                 "horizon",
@@ -1635,26 +1473,16 @@ elif page == "Forecast Center":
         st.dataframe(
             forecast_table.style.format(
                 {
-                    "Origin USD/t":
-                        "{:,.2f}",
-                    "Raw Forecast USD/t":
-                        "{:,.2f}",
-                    "Anchor Forecast USD/t":
-                        "{:,.2f}",
-                    "Final Forecast USD/t":
-                        "{:,.2f}",
-                    "MoM %":
-                        "{:.2f}",
-                    "vs Origin %":
-                        "{:.2f}",
-                    "MAPE %":
-                        "{:.2f}",
-                    "RMSE":
-                        "{:,.2f}",
-                    "Bias":
-                        "{:,.2f}",
-                    "Directional Accuracy %":
-                        "{:.2f}",
+                    "Origin USD/t": "{:,.2f}",
+                    "Raw Forecast USD/t": "{:,.2f}",
+                    "Anchor Forecast USD/t": "{:,.2f}",
+                    "Final Forecast USD/t": "{:,.2f}",
+                    "MoM %": "{:.2f}",
+                    "vs Origin %": "{:.2f}",
+                    "MAPE %": "{:.2f}",
+                    "RMSE": "{:,.2f}",
+                    "Bias": "{:,.2f}",
+                    "Directional Accuracy %": "{:.2f}",
                 }
             ),
             use_container_width=True,
@@ -1666,9 +1494,7 @@ elif page == "Forecast Center":
             "Download Latest Forecast CSV",
             forecast_df.to_csv(
                 index=False
-            ).encode(
-                "utf-8"
-            ),
+            ).encode("utf-8"),
             file_name=(
                 "copper_production_forecast_latest.csv"
             ),
@@ -1676,7 +1502,6 @@ elif page == "Forecast Center":
         )
 
     with tab_diag:
-
         selected_horizon = st.select_slider(
             "Select Horizon",
             options=forecast_df[
@@ -1691,9 +1516,7 @@ elif page == "Forecast Center":
             ] == selected_horizon
         ].iloc[0]
 
-        d1, d2, d3, d4 = st.columns(
-            4
-        )
+        d1, d2, d3, d4 = st.columns(4)
 
         d1.metric(
             "Model",
@@ -1721,9 +1544,7 @@ elif page == "Forecast Center":
             ),
         )
 
-        d5, d6, d7, d8 = st.columns(
-            4
-        )
+        d5, d6, d7, d8 = st.columns(4)
 
         d5.metric(
             "Raw Forecast",
@@ -1753,896 +1574,14 @@ elif page == "Forecast Center":
             ),
         )
 
-        left, right = st.columns(
-            2
-        )
 
-        with left:
-
-            mape_fig = go.Figure()
-
-            mape_fig.add_trace(
-                go.Bar(
-                    x=forecast_df[
-                        "horizon"
-                    ],
-                    y=forecast_df[
-                        "backtest_mape_pct"
-                    ],
-                    hovertemplate=(
-                        "H%{x}<br>"
-                        "MAPE: %{y:.2f}%"
-                        "<extra></extra>"
-                    ),
-                )
-            )
-
-            mape_fig.update_layout(
-                title="MAPE by Horizon",
-                height=390,
-                xaxis_title="Horizon",
-                yaxis_title="MAPE %",
-                margin=dict(
-                    l=20,
-                    r=20,
-                    t=50,
-                    b=20,
-                ),
-            )
-
-            render_plot(
-                mape_fig
-            )
-
-        with right:
-
-            accuracy_fig = (
-                go.Figure()
-            )
-
-            accuracy_fig.add_trace(
-                go.Bar(
-                    x=forecast_df[
-                        "horizon"
-                    ],
-                    y=forecast_df[
-                        "backtest_directional_accuracy_pct"
-                    ],
-                    hovertemplate=(
-                        "H%{x}<br>"
-                        "Accuracy: %{y:.1f}%"
-                        "<extra></extra>"
-                    ),
-                )
-            )
-
-            accuracy_fig.update_layout(
-                title=(
-                    "Directional Accuracy by Horizon"
-                ),
-                height=390,
-                xaxis_title="Horizon",
-                yaxis_title=(
-                    "Directional Accuracy %"
-                ),
-                margin=dict(
-                    l=20,
-                    r=20,
-                    t=50,
-                    b=20,
-                ),
-            )
-
-            render_plot(
-                accuracy_fig
-            )
-
-
-# =============================================================================
-# MARKET DATA EXPLORER
-# =============================================================================
-
-elif page == "Market Data Explorer":
-
-    st.markdown(
-        '<div class="section-title">'
-        'Market Data Explorer'
-        '</div>',
-        unsafe_allow_html=True,
+elif page == "\U0001F310 Market Data Explorer":
+    render_market_data_explorer(
+        master_df=master_df,
     )
 
-    st.caption(
-        "Analyze any monthly market variable and optionally "
-        "compare it directly with the LME copper price."
+
+elif page == "\U0001F9ED Lead-Lag Signals":
+    render_lead_lag_signal_lab(
+        master_df=master_df,
     )
-
-    if master_df.empty:
-        st.error(
-            "Monthly master dataset is empty."
-        )
-
-        st.stop()
-
-    explorer_df = master_df.copy()
-
-    date_column = find_date_column(
-        explorer_df
-    )
-
-    copper_column = (
-        find_copper_target_column(
-            explorer_df
-        )
-    )
-
-    if date_column is None:
-        st.error(
-            "No date column could be detected."
-        )
-
-        st.stop()
-
-    explorer_df[
-        date_column
-    ] = pd.to_datetime(
-        explorer_df[
-            date_column
-        ],
-        errors="coerce",
-    )
-
-    explorer_df = (
-        explorer_df
-        .dropna(
-            subset=[
-                date_column
-            ]
-        )
-        .sort_values(
-            date_column
-        )
-        .reset_index(
-            drop=True
-        )
-    )
-
-    numeric_columns = (
-        get_numeric_columns(
-            explorer_df,
-            date_column,
-        )
-    )
-
-    categories = build_categories(
-        numeric_columns
-    )
-
-    controls = st.columns(
-        [1.15, 2.0, 0.75, 1.0]
-    )
-
-    with controls[0]:
-
-        category = st.selectbox(
-            "Category",
-            list(
-                categories.keys()
-            ),
-        )
-
-    with controls[1]:
-
-        selected_variable = (
-            st.selectbox(
-                "Variable",
-                categories[
-                    category
-                ],
-                format_func=pretty_name,
-            )
-        )
-
-    with controls[2]:
-
-        period = st.selectbox(
-            "Period",
-            [
-                "1Y",
-                "3Y",
-                "5Y",
-                "10Y",
-                "All",
-            ],
-            index=2,
-        )
-
-    with controls[3]:
-
-        overlay_copper = (
-            st.checkbox(
-                "Show Copper Overlay",
-                value=True,
-                disabled=(
-                    selected_variable
-                    == copper_column
-                ),
-            )
-        )
-
-    comparison_mode = st.radio(
-        "Chart Mode",
-        [
-            "Raw Values",
-            "Indexed Comparison (Base = 100)",
-        ],
-        horizontal=True,
-        disabled=(
-            not overlay_copper
-            or selected_variable
-            == copper_column
-        ),
-    )
-
-    explorer_df[
-        selected_variable
-    ] = pd.to_numeric(
-        explorer_df[
-            selected_variable
-        ],
-        errors="coerce",
-    )
-
-    if (
-        copper_column
-        and copper_column
-        in explorer_df.columns
-    ):
-        explorer_df[
-            copper_column
-        ] = pd.to_numeric(
-            explorer_df[
-                copper_column
-            ],
-            errors="coerce",
-        )
-
-    filtered_df = filter_period(
-        explorer_df,
-        date_column,
-        period,
-    )
-
-    series = filtered_df[
-        selected_variable
-    ]
-
-    clean_series = (
-        series.dropna()
-    )
-
-    if clean_series.empty:
-        st.warning(
-            "Selected variable has no numeric data "
-            "for the selected period."
-        )
-
-        st.stop()
-
-    unit = infer_unit(
-        selected_variable
-    )
-
-    latest_value = (
-        clean_series.iloc[-1]
-    )
-
-    one_month_change = (
-        calculate_change(
-            series,
-            1,
-        )
-    )
-
-    three_month_change = (
-        calculate_change(
-            series,
-            3,
-        )
-    )
-
-    twelve_month_change = (
-        calculate_change(
-            series,
-            12,
-        )
-    )
-
-    missing_pct = (
-        series.isna().mean()
-        * 100
-    )
-
-    cards = st.columns(
-        6
-    )
-
-    with cards[0]:
-        render_card(
-            "Latest",
-            f"{latest_value:,.2f}",
-            unit,
-        )
-
-    with cards[1]:
-        render_card(
-            "1M Change",
-            (
-                f"{one_month_change:+.2f}%"
-                if pd.notna(
-                    one_month_change
-                )
-                else "N/A"
-            ),
-        )
-
-    with cards[2]:
-        render_card(
-            "3M Change",
-            (
-                f"{three_month_change:+.2f}%"
-                if pd.notna(
-                    three_month_change
-                )
-                else "N/A"
-            ),
-        )
-
-    with cards[3]:
-        render_card(
-            "12M Change",
-            (
-                f"{twelve_month_change:+.2f}%"
-                if pd.notna(
-                    twelve_month_change
-                )
-                else "N/A"
-            ),
-        )
-
-    with cards[4]:
-        render_card(
-            "Observations",
-            f"{len(clean_series):,}",
-        )
-
-    with cards[5]:
-        render_card(
-            "Missing",
-            f"{missing_pct:.1f}%",
-        )
-
-    st.divider()
-
-    chart_col, stats_col = st.columns(
-        [3.25, 1]
-    )
-
-    with chart_col:
-
-        st.markdown(
-            f"### {pretty_name(selected_variable)}"
-        )
-
-        st.caption(
-            f"Primary unit: {unit}"
-        )
-
-        explorer_fig = (
-            go.Figure()
-        )
-
-        use_overlay = (
-            overlay_copper
-            and copper_column
-            and copper_column
-            != selected_variable
-        )
-
-        if (
-            use_overlay
-            and comparison_mode
-            == "Indexed Comparison (Base = 100)"
-        ):
-
-            comparison_df = (
-                filtered_df[
-                    [
-                        date_column,
-                        selected_variable,
-                        copper_column,
-                    ]
-                ]
-                .copy()
-                .dropna()
-            )
-
-            if not comparison_df.empty:
-
-                selected_base = (
-                    comparison_df[
-                        selected_variable
-                    ].iloc[0]
-                )
-
-                copper_base = (
-                    comparison_df[
-                        copper_column
-                    ].iloc[0]
-                )
-
-                if (
-                    selected_base != 0
-                    and copper_base != 0
-                ):
-
-                    comparison_df[
-                        "selected_index"
-                    ] = (
-                        comparison_df[
-                            selected_variable
-                        ]
-                        / selected_base
-                        * 100
-                    )
-
-                    comparison_df[
-                        "copper_index"
-                    ] = (
-                        comparison_df[
-                            copper_column
-                        ]
-                        / copper_base
-                        * 100
-                    )
-
-                    explorer_fig.add_trace(
-                        go.Scatter(
-                            x=comparison_df[
-                                date_column
-                            ],
-                            y=comparison_df[
-                                "selected_index"
-                            ],
-                            mode="lines+markers",
-                            name=pretty_name(
-                                selected_variable
-                            ),
-                            line=dict(
-                                width=2.6,
-                            ),
-                            marker=dict(
-                                size=6,
-                            ),
-                            hovertemplate=(
-                                "<b>%{x|%b %Y}</b>"
-                                "<br>"
-                                "Index: %{y:.2f}"
-                                "<extra></extra>"
-                            ),
-                        )
-                    )
-
-                    explorer_fig.add_trace(
-                        go.Scatter(
-                            x=comparison_df[
-                                date_column
-                            ],
-                            y=comparison_df[
-                                "copper_index"
-                            ],
-                            mode="lines+markers",
-                            name="LME Copper Price",
-                            line=dict(
-                                width=2.6,
-                                dash="dash",
-                            ),
-                            marker=dict(
-                                size=6,
-                            ),
-                            hovertemplate=(
-                                "<b>%{x|%b %Y}</b>"
-                                "<br>"
-                                "Copper Index: %{y:.2f}"
-                                "<extra></extra>"
-                            ),
-                        )
-                    )
-
-            explorer_fig.update_layout(
-                yaxis_title=(
-                    "Index (Base = 100)"
-                ),
-            )
-
-        else:
-
-            explorer_fig.add_trace(
-                go.Scatter(
-                    x=filtered_df[
-                        date_column
-                    ],
-                    y=filtered_df[
-                        selected_variable
-                    ],
-                    mode="lines+markers",
-                    name=pretty_name(
-                        selected_variable
-                    ),
-                    connectgaps=False,
-                    line=dict(
-                        width=2.6,
-                    ),
-                    marker=dict(
-                        size=6,
-                    ),
-                    hovertemplate=(
-                        "<b>%{x|%b %Y}</b>"
-                        "<br>"
-                        "Value: %{y:,.4f}"
-                        f"<br>Unit: {unit}"
-                        "<extra></extra>"
-                    ),
-                )
-            )
-
-            if use_overlay:
-
-                explorer_fig.add_trace(
-                    go.Scatter(
-                        x=filtered_df[
-                            date_column
-                        ],
-                        y=filtered_df[
-                            copper_column
-                        ],
-                        mode="lines",
-                        name="LME Copper Price",
-                        yaxis="y2",
-                        line=dict(
-                            width=2.5,
-                            dash="dash",
-                        ),
-                        hovertemplate=(
-                            "<b>%{x|%b %Y}</b>"
-                            "<br>"
-                            "Copper: $%{y:,.2f}/t"
-                            "<extra></extra>"
-                        ),
-                    )
-                )
-
-                explorer_fig.update_layout(
-                    yaxis=dict(
-                        title=unit,
-                    ),
-                    yaxis2=dict(
-                        title=(
-                            "Copper USD / ton"
-                        ),
-                        overlaying="y",
-                        side="right",
-                        showgrid=False,
-                    ),
-                )
-
-            else:
-
-                explorer_fig.update_layout(
-                    yaxis=dict(
-                        title=unit,
-                    ),
-                )
-
-        explorer_fig.update_layout(
-            height=660,
-            margin=dict(
-                l=25,
-                r=50,
-                t=120,
-                b=20,
-            ),
-            hovermode="x unified",
-            dragmode="zoom",
-            xaxis_title="Month",
-        )
-
-        configure_time_axis(
-            explorer_fig,
-            show_range_slider=True,
-        )
-
-        configure_top_legend(
-            explorer_fig
-        )
-
-        render_plot(
-            explorer_fig
-        )
-
-        if use_overlay:
-
-            st.caption(
-                "Tip: Click a legend item to hide/show a series. "
-                "Double-click a legend item to isolate that series."
-            )
-
-    with stats_col:
-
-        st.markdown(
-            "### Statistics"
-        )
-
-        st.metric(
-            "Mean",
-            f"{clean_series.mean():,.2f}",
-        )
-
-        st.metric(
-            "Median",
-            f"{clean_series.median():,.2f}",
-        )
-
-        st.metric(
-            "Minimum",
-            f"{clean_series.min():,.2f}",
-        )
-
-        st.metric(
-            "Maximum",
-            f"{clean_series.max():,.2f}",
-        )
-
-        st.metric(
-            "Std. Deviation",
-            f"{clean_series.std():,.2f}",
-        )
-
-        valid_mask = filtered_df[
-            selected_variable
-        ].notna()
-
-        if valid_mask.any():
-
-            latest_valid_date = (
-                filtered_df.loc[
-                    valid_mask,
-                    date_column,
-                ].iloc[-1]
-            )
-
-            st.metric(
-                "Latest Data Month",
-                latest_valid_date.strftime(
-                    "%b %Y"
-                ),
-            )
-
-        if use_overlay:
-
-            aligned = filtered_df[
-                [
-                    selected_variable,
-                    copper_column,
-                ]
-            ].dropna()
-
-            if len(
-                aligned
-            ) >= 3:
-
-                correlation = (
-                    aligned[
-                        selected_variable
-                    ]
-                    .corr(
-                        aligned[
-                            copper_column
-                        ]
-                    )
-                )
-
-                st.metric(
-                    "Copper Correlation",
-                    f"{correlation:+.3f}",
-                )
-
-    st.divider()
-
-    raw_tab, stats_tab, missing_tab = (
-        st.tabs(
-            [
-                "Raw Data",
-                "Descriptive Statistics",
-                "Missing Data",
-            ]
-        )
-    )
-
-    with raw_tab:
-
-        raw_columns = [
-            date_column,
-            selected_variable,
-        ]
-
-        if (
-            use_overlay
-            and copper_column
-            not in raw_columns
-        ):
-            raw_columns.append(
-                copper_column
-            )
-
-        raw_table = (
-            filtered_df[
-                raw_columns
-            ].copy()
-        )
-
-        rename_map = {
-            date_column:
-                "Date",
-            selected_variable:
-                pretty_name(
-                    selected_variable
-                ),
-        }
-
-        if use_overlay:
-            rename_map[
-                copper_column
-            ] = (
-                "LME Copper Price USD/t"
-            )
-
-        raw_table = (
-            raw_table.rename(
-                columns=rename_map
-            )
-        )
-
-        st.dataframe(
-            raw_table,
-            use_container_width=True,
-            hide_index=True,
-            height=440,
-        )
-
-        st.download_button(
-            "Download Selected Data",
-            raw_table.to_csv(
-                index=False
-            ).encode(
-                "utf-8"
-            ),
-            file_name=(
-                f"{selected_variable}_analysis.csv"
-            ),
-            mime="text/csv",
-        )
-
-    with stats_tab:
-
-        descriptive = (
-            clean_series
-            .describe()
-            .to_frame(
-                name="Value"
-            )
-        )
-
-        descriptive.loc[
-            "missing_count"
-        ] = (
-            series.isna().sum()
-        )
-
-        descriptive.loc[
-            "missing_pct"
-        ] = (
-            missing_pct
-        )
-
-        descriptive.loc[
-            "latest_value"
-        ] = (
-            latest_value
-        )
-
-        descriptive.loc[
-            "1m_change_pct"
-        ] = (
-            one_month_change
-        )
-
-        descriptive.loc[
-            "3m_change_pct"
-        ] = (
-            three_month_change
-        )
-
-        descriptive.loc[
-            "12m_change_pct"
-        ] = (
-            twelve_month_change
-        )
-
-        st.dataframe(
-            descriptive,
-            use_container_width=True,
-        )
-
-    with missing_tab:
-
-        valid_dates = filtered_df.loc[
-            filtered_df[
-                selected_variable
-            ].notna(),
-            date_column,
-        ]
-
-        first_valid = (
-            valid_dates.iloc[0]
-            .strftime(
-                "%Y-%m-%d"
-            )
-            if not valid_dates.empty
-            else "N/A"
-        )
-
-        last_valid = (
-            valid_dates.iloc[-1]
-            .strftime(
-                "%Y-%m-%d"
-            )
-            if not valid_dates.empty
-            else "N/A"
-        )
-
-        missing_table = pd.DataFrame(
-            {
-                "Metric": [
-                    "Total rows",
-                    "Valid observations",
-                    "Missing observations",
-                    "Missing %",
-                    "First valid month",
-                    "Last valid month",
-                    "Unit",
-                    "Source column",
-                ],
-                "Value": [
-                    len(
-                        series
-                    ),
-                    int(
-                        series.notna().sum()
-                    ),
-                    int(
-                        series.isna().sum()
-                    ),
-                    f"{missing_pct:.2f}%",
-                    first_valid,
-                    last_valid,
-                    unit,
-                    selected_variable,
-                ],
-            }
-        )
-
-        st.dataframe(
-            missing_table,
-            use_container_width=True,
-            hide_index=True,
-        )
