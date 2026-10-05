@@ -1,0 +1,2 @@
+previous_archive,previous_generated_at,previous_forecast_origin,realized_month,horizon,previous_prediction_usd_per_ton,actual_usd_per_ton,actual_source,error_actual_minus_prediction,absolute_percentage_error,predicted_direction,actual_direction,direction_correct
+data/predictions/archive/copper_production_forecast_2026-08-31_20260907T170146.csv,2026-09-07 17:01:46.123484,2026-08-31,2026-09-30,1,14053.501785094255,14483.386363636364,data/predictions/copper_production_forecast_latest.csv,429.884578542109,2.9681220106191883,DOWN,UP,False

@@ -260,138 +260,130 @@ def jsonstat2_to_dataframe(data):
 
 
 def ingest_irena_capacity():
-    # Yeni IRENA tablosunda kapasite ve uretim ayni tabloda bulunuyor.
-    url = (
-        "https://pxweb.irena.org/api/v1/en/IRENASTAT/"
-        "Power%20Capacity%20and%20Generation/"
-        "Region_ELECSTAT_2026_H2_PX.px"
-    )
-
-    headers = {
-        **HEADERS,
-        "Accept": "application/json",
-    }
-
-    # Kodlari metadata etiketlerinden bul.
-    metadata_response = requests.get(
-        url,
-        headers=headers,
-        timeout=60,
-    )
-    metadata_response.raise_for_status()
-    metadata = metadata_response.json()
-
-    variables = {
-        variable["code"]: variable
-        for variable in metadata["variables"]
-    }
-
-    def code_for_label(dimension, label):
-        variable = variables[dimension]
-        for code, text in zip(
-            variable["values"],
-            variable["valueTexts"],
-        ):
-            if text.strip().casefold() == label.casefold():
-                return code
-        raise ValueError(
-            f"IRENA etiketi bulunamadi: {dimension} / {label}"
-        )
-
-    technology_columns = {
-        "Total Renewable": "global_renewable_capacity_mw",
-        "Solar energy": "global_solar_capacity_mw",
-        "Wind energy": "global_wind_capacity_mw",
-    }
-
-    year_variable = variables["Year"]
     year_codes = [
-        code
-        for code, label in zip(
-            year_variable["values"],
-            year_variable["valueTexts"],
+        str(value)
+        for value in range(
+            15,
+            26,
         )
-        if label.isdigit() and int(label) >= 2015
     ]
-
-    if not year_codes:
-        raise ValueError("IRENA yil secimi bos.")
-
-    selections = {
-        "Region": [code_for_label("Region", "World")],
-        "Technology": [
-            code_for_label("Technology", label)
-            for label in technology_columns
-        ],
-        "Data Type": [
-            code_for_label(
-                "Data Type",
-                "Electrical Installed Capacity (MW)",
-            )
-        ],
-        "Year": year_codes,
-    }
 
     payload = {
         "query": [
             {
-                "code": dimension,
+                "code": "Region",
                 "selection": {
                     "filter": "item",
-                    "values": codes,
+                    "values": [
+                        "GLO"
+                    ],
                 },
-            }
-            for dimension, codes in selections.items()
+            },
+            {
+                "code": "Technology",
+                "selection": {
+                    "filter": "item",
+                    "values": [
+                        "0",
+                        "1",
+                        "2",
+                    ],
+                },
+            },
+            {
+                "code": "Grid connection",
+                "selection": {
+                    "filter": "item",
+                    "values": [
+                        "0",
+                        "1",
+                    ],
+                },
+            },
+            {
+                "code": "Year",
+                "selection": {
+                    "filter": "item",
+                    "values": year_codes,
+                },
+            },
         ],
-        "response": {"format": "json-stat2"},
+        "response": {
+            "format": "json-stat2"
+        },
     }
 
     response = requests.post(
-        url,
+        IRENA_URL,
         json=payload,
-        headers=headers,
+        headers={
+            **HEADERS,
+            "Accept": "application/json",
+        },
         timeout=60,
     )
+
     response.raise_for_status()
 
-    df = jsonstat2_to_dataframe(response.json())
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+    data = response.json()
 
-    if df.empty or df["value"].isna().any():
-        raise ValueError("IRENA kapasite verisi bos veya eksik.")
+    df = jsonstat2_to_dataframe(
+        data
+    )
 
-    if df.duplicated(["Year", "Technology"]).any():
-        raise ValueError("IRENA yil ve teknoloji eslesmeleri tekrar ediyor.")
+    df["value"] = pd.to_numeric(
+        df["value"],
+        errors="coerce",
+    )
 
-    pivot = df.pivot(
+    grouped = (
+        df.groupby(
+            [
+                "Year",
+                "Technology",
+            ],
+            as_index=False,
+        )[
+            "value"
+        ]
+        .sum(
+            min_count=1
+        )
+    )
+
+    pivot = grouped.pivot(
         index="Year",
         columns="Technology",
         values="value",
     ).reset_index()
 
     pivot = pivot.rename(
-        columns={"Year": "year", **technology_columns}
+        columns={
+            "Year": "year",
+            "Total renewable energy":
+                "global_renewable_capacity_mw",
+            "Solar energy":
+                "global_solar_capacity_mw",
+            "Wind energy":
+                "global_wind_capacity_mw",
+        }
     )
-
-    required_columns = ["year", *technology_columns.values()]
-    missing = [
-        column for column in required_columns
-        if column not in pivot.columns
-    ]
-    if missing:
-        raise ValueError(f"IRENA cikti kolonlari eksik: {missing}")
 
     pivot["year"] = pd.to_numeric(
         pivot["year"],
-        errors="raise",
-    ).astype("Int64")
-
-    return (
-        pivot[required_columns]
-        .sort_values("year")
-        .reset_index(drop=True)
+        errors="coerce",
+    ).astype(
+        "Int64"
     )
 
+    return pivot[
+        [
+            "year",
+            "global_renewable_capacity_mw",
+            "global_solar_capacity_mw",
+            "global_wind_capacity_mw",
+        ]
+    ]
 
 
 def main():

@@ -1254,105 +1254,6 @@ def extract_mcs2026_pdf_rows():
 # MAIN INGESTION
 # =========================
 
-
-def extract_usgs_copper_pdf_fallback(report_year):
-    """ScienceBase okunamazsa resmi Copper PDF tablosunu oku."""
-    import re
-
-    url = (
-        f"https://pubs.usgs.gov/periodicals/"
-        f"mcs{report_year}/mcs{report_year}.pdf"
-    )
-    print(f"[INFO] PDF fallback: MCS{report_year}")
-
-    response = requests.get(url, headers=HEADERS, timeout=60)
-    response.raise_for_status()
-
-    candidates = []
-
-    with pymupdf.open(stream=response.content, filetype="pdf") as doc:
-        for page in doc:
-            text = page.get_text()
-            lines = [
-                line.strip()
-                for line in text.splitlines()
-                if line.strip()
-            ]
-
-            # Diger metallerin metnindeki copper kelimesini kabul etme.
-            if "COPPER" not in lines:
-                continue
-
-            if "World Mine and Refinery Production and Reserves" not in text:
-                continue
-
-            indices = [
-                index for index, line in enumerate(lines)
-                if line.lower() == "world total (rounded)"
-            ]
-            if len(indices) != 1:
-                continue
-
-            index = indices[0]
-            header = " ".join(lines[:index])
-            if str(report_year - 2) not in header:
-                raise ValueError("PDF onceki yil basligi bulunamadi.")
-            if str(report_year - 1) not in header:
-                raise ValueError("PDF son yil basligi bulunamadi.")
-
-            # Beklenen sira: iki maden, iki rafineri, bir rezerv degeri.
-            cells = lines[index + 1:index + 6]
-            if len(cells) != 5 or not all(
-                re.fullmatch(r"[0-9][0-9,]*(?:\.[0-9]+)?", cell)
-                for cell in cells
-            ):
-                raise ValueError(
-                    f"MCS{report_year}: Dunya toplam satiri beklenen formatta degil."
-                )
-
-            values = [
-                float(cell.replace(",", "")) * 1000
-                for cell in cells
-            ]
-
-            # Yanlis tablo veya birim okunmasini engelle.
-            if not all(10_000_000 < value < 50_000_000 for value in values[:4]):
-                raise ValueError("Uretim degerleri beklenen ton araliginda degil.")
-            if not 100_000_000 < values[4] < 3_000_000_000:
-                raise ValueError("Rezerv degeri beklenen ton araliginda degil.")
-
-            candidates.append(values)
-
-    if len(candidates) != 1:
-        raise ValueError(
-            f"MCS{report_year}: Benzersiz Copper tablosu bulunamadi."
-        )
-
-    mine_previous, mine_latest, refinery_previous, refinery_latest, reserves = (
-        candidates[0]
-    )
-
-    return [
-        {
-            "observation_year": report_year - 2,
-            "world_copper_mine_production_ton": mine_previous,
-            "world_copper_refinery_production_ton": refinery_previous,
-            "world_copper_reserves_ton": None,
-            "is_estimate": False,
-            "report_year": report_year,
-            "source": f"USGS_MCS{report_year}",
-        },
-        {
-            "observation_year": report_year - 1,
-            "world_copper_mine_production_ton": mine_latest,
-            "world_copper_refinery_production_ton": refinery_latest,
-            "world_copper_reserves_ton": reserves,
-            "is_estimate": True,
-            "report_year": report_year,
-            "source": f"USGS_MCS{report_year}",
-        },
-    ]
-
 def fetch_all_usgs_data():
     """
     Tum tanimli USGS release'lerini dolasir.
@@ -1468,13 +1369,6 @@ def fetch_all_usgs_data():
 
             print(
                 f"[WARN] MCS{report_year} failed: {exc}"
-            )
-
-            fallback_rows = extract_usgs_copper_pdf_fallback(report_year)
-            all_rows.extend(fallback_rows)
-            print(
-                f"[OK] MCS{report_year} PDF fallback: "
-                f"{len(fallback_rows)} observation rows parsed"
             )
 
     if not all_rows:

@@ -239,9 +239,8 @@ month,peru_usd_pen,peru_diesel_price_index,peru_industrial_electricity_tariff_in
 2014-10,2.906,108.0,111.0,,null_peru_formal_private_income_pen,
 2014-11,2.925,104.0,111.0,,null_peru_formal_private_income_pen,
 2014-12,2.962,98.0,110.0,,null_peru_formal_private_income_pen,
-2026-07,3.4,119.0,129.0,,null_peru_formal_private_income_pen,
-2026-08,3.365,133.0,136.0,,null_peru_formal_private_income_pen,
-2026-03,3.447,115.0,123.0,4661.2,large_monthly_change_peru_diesel_price_index,0.3068181818181819
+2026-08,3.364,133.0,136.0,,null_peru_formal_private_income_pen,
+2026-03,3.447,115.0,123.0,4636.8,large_monthly_change_peru_diesel_price_index,0.3068181818181819
 2015-07,3.181,77.0,127.0,3658.9,large_monthly_change_peru_formal_private_income_pen,0.6692062043795621
 2015-08,3.238,77.0,129.0,2129.1,large_monthly_change_peru_formal_private_income_pen,0.4181038016890323
 2015-12,3.383,75.0,129.0,3897.0,large_monthly_change_peru_formal_private_income_pen,0.8097803371569219
@@ -285,5 +284,6 @@ month,peru_usd_pen,peru_diesel_price_index,peru_industrial_electricity_tariff_in
 2025-03,3.653,95.0,144.0,4294.7,large_monthly_change_peru_formal_private_income_pen,0.4057937806873977
 2025-07,3.556,92.0,142.0,4729.6,large_monthly_change_peru_formal_private_income_pen,0.6095834467737544
 2025-12,3.367,90.0,132.0,4991.9,large_monthly_change_peru_formal_private_income_pen,0.7290959473501903
-2026-01,3.357,89.0,132.0,2955.7,large_monthly_change_peru_formal_private_income_pen,0.4079007992948577
-2026-03,3.447,115.0,123.0,4661.2,large_monthly_change_peru_formal_private_income_pen,0.5060906652880544
+2026-01,3.357,89.0,132.0,2955.5,large_monthly_change_peru_formal_private_income_pen,0.40794086420000397
+2026-03,3.447,115.0,123.0,4636.8,large_monthly_change_peru_formal_private_income_pen,0.4983519679441608
+2026-07,3.4,119.0,129.0,4818.6,large_monthly_change_peru_formal_private_income_pen,0.6196430372088335
