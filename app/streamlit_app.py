@@ -49,7 +49,7 @@ MASTER_FILE = (
 
 
 st.set_page_config(
-    page_title="Copper Intelligence & Forecasting Center",
+    page_title="Copper Prediction with Machine Learning",
     page_icon="\U0001F4C8",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -803,7 +803,7 @@ else:
 
 st.markdown(
     '<div class="main-title">'
-    'Copper Intelligence & Forecasting Center'
+    'Copper Prediction with Machine Learning'
     '</div>',
     unsafe_allow_html=True,
 )
