@@ -139,69 +139,54 @@ def request_json(params):
 def get_latest_date():
     params = {
         "where": "1=1",
-        "outFields": (
-            "date,"
-            "year,"
-            "month,"
-            "day"
-        ),
+        "outStatistics": json.dumps([
+            {
+                "statisticType": "max",
+                "onStatisticField": "date",
+                "outStatisticFieldName": "latest_date",
+            }
+        ]),
         "returnGeometry": "false",
-        "orderByFields": (
-            "year DESC,"
-            "month DESC,"
-            "day DESC"
-        ),
-        "resultRecordCount": 1,
         "f": "json",
     }
 
-    payload = request_json(
-        params
+    response = requests.post(
+        API_URL,
+        data=params,
+        timeout=120,
     )
+    response.raise_for_status()
 
-    features = payload.get(
-        "features",
-        []
-    )
+    payload = response.json()
+
+    if "error" in payload:
+        raise RuntimeError(payload["error"])
+
+    features = payload.get("features", [])
 
     if not features:
-        raise RuntimeError(
-            "No PortWatch records found"
+        raise RuntimeError("PortWatch son tarih sonucu bos.")
+
+    value = features[0].get(
+        "attributes", {}
+    ).get("latest_date")
+
+    if value is None:
+        raise RuntimeError("PortWatch son tarih bulunamadi.")
+
+    # Servisin test edilen DateOnly yaniti: YYYY-MM-DD.
+    latest_date = pd.to_datetime(
+        str(value),
+        format="%Y-%m-%d",
+        errors="raise",
+    )
+
+    if pd.isna(latest_date) or latest_date < START_DATE:
+        raise ValueError(
+            f"PortWatch son tarihi gecersiz: {value}"
         )
 
-    attributes = features[0].get(
-        "attributes",
-        {}
-    )
-
-    year = attributes.get(
-        "year"
-    )
-
-    month = attributes.get(
-        "month"
-    )
-
-    day = attributes.get(
-        "day"
-    )
-
-    if (
-        year is None
-        or month is None
-        or day is None
-    ):
-        raise RuntimeError(
-            "Latest PortWatch date fields are missing"
-        )
-
-    latest_date = pd.Timestamp(
-        year=int(year),
-        month=int(month),
-        day=int(day),
-    )
-
-    return latest_date
+    return latest_date.normalize()
 
 
 def make_port_where(port_ids):

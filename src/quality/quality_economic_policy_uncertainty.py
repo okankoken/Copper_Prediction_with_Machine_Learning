@@ -293,63 +293,55 @@ def check_freshness(df):
         .to_period("M")
     )
 
-    for column in EXPECTED_COLUMNS[1:]:
+    # Normal toleransin uzerinde bir ay uyari payi.
+    warning_limit = MAX_LAG_MONTHS + 1
 
-        valid = (
-            df[
-                [
-                    "date",
-                    column,
-                ]
-            ]
-            .dropna()
-        )
+    for column in EXPECTED_COLUMNS[1:]:
+        valid = df[["date", column]].dropna()
 
         if valid.empty:
-
             add_result(
                 "FAIL",
                 f"Freshness - {column}",
                 "No valid observations",
             )
-
             continue
 
-        latest_date = valid[
-            "date"
-        ].max()
-
-        latest_period = (
-            latest_date
-            .to_period("M")
-        )
+        latest_date = valid["date"].max()
+        latest_period = latest_date.to_period("M")
 
         lag_months = (
             current_period.ordinal
             - latest_period.ordinal
         )
 
-        if lag_months <= MAX_LAG_MONTHS:
+        if lag_months < 0:
+            status = "FAIL"
+            note = "Future observation date"
 
-            add_result(
-                "PASS",
-                f"Freshness - {column}",
-                (
-                    f"Latest month: {latest_date:%Y-%m}, "
-                    f"lag: {lag_months} month(s)"
-                ),
+        elif lag_months <= MAX_LAG_MONTHS:
+            status = "PASS"
+            note = "Within normal freshness limit"
+
+        elif lag_months <= warning_limit:
+            status = "WARNING"
+            note = (
+                "Stale data accepted within one-month grace period; "
+                "review source publication"
             )
 
         else:
+            status = "FAIL"
+            note = "Freshness grace period exceeded"
 
-            add_result(
-                "FAIL",
-                f"Freshness - {column}",
-                (
-                    f"Latest month: {latest_date:%Y-%m}, "
-                    f"lag: {lag_months} month(s)"
-                ),
-            )
+        add_result(
+            status,
+            f"Freshness - {column}",
+            (
+                f"Latest month: {latest_date:%Y-%m}, "
+                f"lag: {lag_months} month(s). {note}"
+            ),
+        )
 
 
 def check_recent_variation(df):

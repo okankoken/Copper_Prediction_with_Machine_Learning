@@ -411,7 +411,102 @@ def main():
         "[INFO] Fetching IRENA capacity"
     )
 
-    capacity = ingest_irena_capacity()
+    try:
+        capacity = ingest_irena_capacity()
+
+    except (requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout) as exc:
+
+        print(
+            "[WARN] IRENA baglanti hatasi: "
+            f"{type(exc).__name__}: {exc}"
+        )
+
+        if not OUTPUT_PATH.exists():
+            raise RuntimeError(
+                "IRENA erisilemiyor ve kayitli veri bulunamadi."
+            ) from exc
+
+        capacity_columns = [
+            "global_renewable_capacity_mw",
+            "global_solar_capacity_mw",
+            "global_wind_capacity_mw",
+        ]
+
+        cached = pd.read_csv(OUTPUT_PATH)
+
+        required = ["date", *capacity_columns]
+        missing = [
+            column
+            for column in required
+            if column not in cached.columns
+        ]
+
+        if missing:
+            raise ValueError(
+                f"Kayitli IRENA kolonlari eksik: {missing}"
+            )
+
+        dates = pd.to_datetime(
+            cached["date"],
+            errors="raise",
+        )
+
+        if dates.isna().any():
+            raise ValueError("Kayitli IRENA tarihleri eksik.")
+
+        capacity = cached[capacity_columns].copy()
+        capacity.insert(0, "year", dates.dt.year)
+
+        if capacity["year"].duplicated().any():
+            raise ValueError("Kayitli IRENA yillari tekrar ediyor.")
+
+        for column in capacity_columns:
+            capacity[column] = pd.to_numeric(
+                capacity[column],
+                errors="raise",
+            )
+
+        if (
+            capacity[capacity_columns].isna().any().any()
+            or (capacity[capacity_columns] <= 0).any().any()
+            or capacity[capacity_columns].isin(
+                [float("inf"), float("-inf")]
+            ).any().any()
+        ):
+            raise ValueError(
+                "Kayitli IRENA kapasite degerleri gecersiz."
+            )
+
+        # Bu calisma icin beklenen tarihsel kapsam.
+        expected_years = set(range(2015, 2026))
+        missing_years = sorted(
+            expected_years - set(capacity["year"])
+        )
+
+        if missing_years:
+            raise ValueError(
+                f"Kayitli IRENA yillari eksik: {missing_years}"
+            )
+
+        capacity = capacity.sort_values(
+            "year"
+        ).reset_index(drop=True)
+
+        print(
+            "[WARN] CANLI IRENA VERISI ALINAMADI. "
+            "Onceki dosyadaki kapasite verileri kullaniliyor."
+        )
+        print(
+            "[WARN] Kayitli IRENA yil araligi: "
+            f"{capacity['year'].min()} - "
+            f"{capacity['year'].max()}"
+        )
+        print(
+            "[INFO] IEA satis ve stok verileri "
+            "bu calismada yeniden cekildi."
+        )
+
 
     final = (
         sales

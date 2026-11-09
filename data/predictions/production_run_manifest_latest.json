@@ -1,31 +1,31 @@
 {
   "project": "Copper_Prediction_with_Machine_Learning",
-  "forecast_origin": "2026-09-30",
-  "generated_at": "2026-10-05T21:07:31.775366",
+  "forecast_origin": "2026-10-31",
+  "generated_at": "2026-11-09T17:11:07.477289",
   "production_policy_version": "v1_reconciled_h1_blend",
-  "origin_price_usd_per_ton": 14483.386363636364,
+  "origin_price_usd_per_ton": 14532.477272727272,
   "input_snapshots": {
     "monthly_master": {
-      "path": "/opt/airflow/data/processed/monthly/archive/copper_monthly_master_2026-09-30_20261005T210724.csv",
-      "file_name": "copper_monthly_master_2026-09-30_20261005T210724.csv",
-      "size_bytes": 326704,
-      "sha256": "42cc4f1ec4d35df7d5d5eaf53fb99fc8b3e7fdbb4d64557249a971d7dd4dfc85"
+      "path": "/opt/airflow/data/processed/monthly/archive/copper_monthly_master_2026-10-31_20261109T171059.csv",
+      "file_name": "copper_monthly_master_2026-10-31_20261109T171059.csv",
+      "size_bytes": 330027,
+      "sha256": "35cf00816967b6be60de2f8288b06cf9b38353d13d1311a255f35b6945caf1fe"
     },
     "model_features": {
-      "path": "/opt/airflow/data/processed/features/archive/copper_model_features_2026-09-30_20261005T210724.csv",
-      "file_name": "copper_model_features_2026-09-30_20261005T210724.csv",
-      "size_bytes": 2749621,
-      "sha256": "04f40ce5027d4eb892d36558d972e86c55012df019283fb3d447a6ee81d37af0"
+      "path": "/opt/airflow/data/processed/features/archive/copper_model_features_2026-10-31_20261109T171059.csv",
+      "file_name": "copper_model_features_2026-10-31_20261109T171059.csv",
+      "size_bytes": 2776386,
+      "sha256": "058bd4a0e02d55bc6d8d8ec161dfacc1988b1c54a50876ff8a2e61d2511f9ad7"
     },
     "multi_horizon_features": {
-      "path": "/opt/airflow/data/processed/features/archive/copper_multi_horizon_features_2026-09-30_20261005T210724.csv",
-      "file_name": "copper_multi_horizon_features_2026-09-30_20261005T210724.csv",
-      "size_bytes": 2832904,
-      "sha256": "4030481bff306eb8a55d62330297ae31cb4fd94b3d6e19d3487d1f03b5c528f3"
+      "path": "/opt/airflow/data/processed/features/archive/copper_multi_horizon_features_2026-10-31_20261109T171059.csv",
+      "file_name": "copper_multi_horizon_features_2026-10-31_20261109T171059.csv",
+      "size_bytes": 2860550,
+      "sha256": "01a8fa53010adc37f38f2bf2e262df00cd52f6a850f0201666b8f7f647138882"
     },
     "feature_manifest": {
-      "path": "/opt/airflow/data/processed/features/archive/copper_model_feature_manifest_2026-09-30_20261005T210724.csv",
-      "file_name": "copper_model_feature_manifest_2026-09-30_20261005T210724.csv",
+      "path": "/opt/airflow/data/processed/features/archive/copper_model_feature_manifest_2026-10-31_20261109T171059.csv",
+      "file_name": "copper_model_feature_manifest_2026-10-31_20261109T171059.csv",
       "size_bytes": 125910,
       "sha256": "40dcda805c94a7db3f399a67e185315f4b40a0ff5475de24c88f3be8a6f52781"
     }
