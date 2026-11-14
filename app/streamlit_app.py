@@ -855,7 +855,51 @@ h6 = horizon_row(6)
 h12 = horizon_row(12)
 
 
+def active_period_forecast(forecast: pd.DataFrame) -> pd.DataFrame:
+    blocks = load_csv(PROJECT_ROOT / "data/predictions/copper_production_blocks_latest.csv")
+    if forecast.empty or blocks.empty or "generated_at" not in blocks:
+        return pd.DataFrame()
+    issued = pd.to_datetime(blocks["generated_at"], utc=True, errors="coerce")
+    active_issue = pd.to_datetime(forecast["generated_at"].iloc[0], utc=True)
+    return blocks.loc[issued.eq(active_issue)].sort_values("period_start").copy()
+
+
 if page == "\U0001F3E0 Executive Overview":
+    periods = active_period_forecast(forecast_df)
+    if not periods.empty:
+        st.subheader("10 Günlük Bakır Görünümü")
+        prices = periods["price_usd_per_ton"]
+        periods["change"] = prices.diff()
+        periods["percent"] = prices.pct_change() * 100
+        periods["status"] = np.select(
+            [periods["observed_days"].eq(periods["trading_days"]), periods["observed_days"].gt(0)],
+            ["Gerçekleşen", "Kısmi tahmin"], default="Tahmin",
+        )
+        chart = go.Figure(go.Scatter(
+            x=periods["period_start"], y=prices, mode="lines+markers",
+            line=dict(color="#b45309", width=3),
+            marker=dict(color=periods["status"].map({
+                "Gerçekleşen": "#475569", "Kısmi tahmin": "#a16207", "Tahmin": "#b45309",
+            }), size=8),
+            customdata=periods[["period_end", "status"]],
+            hovertemplate="%{x|%d.%m.%Y} – %{customdata[0]}<br>%{y:,.2f} USD/ton"
+                          "<br>%{customdata[1]}<extra></extra>",
+        ))
+        chart.update_layout(height=320, yaxis_title="USD/ton", margin=dict(l=20, r=20, t=15, b=20))
+        chart.update_xaxes(type="date")
+        st.plotly_chart(chart, use_container_width=True, config=PLOTLY_CONFIG)
+        columns = st.columns(2)
+        for column, direction, moves in (
+            (columns[0], "↑ En büyük yükselişler", periods[periods["change"].gt(0)].nlargest(3, "change")),
+            (columns[1], "↓ En büyük düşüşler", periods[periods["change"].lt(0)].nsmallest(3, "change")),
+        ):
+            column.markdown(f"**{direction}**")
+            for move in moves.itertuples():
+                start = pd.Timestamp(move.period_start).strftime("%d.%m.%Y")
+                end = pd.Timestamp(move.period_end).strftime("%d.%m.%Y")
+                column.metric(f"{start} – {end} · {move.status}", f"{move.price_usd_per_ton:,.2f} USD/ton",
+                              f"{move.change:+,.2f} USD/ton ({move.percent:+.2f}%)")
+        st.caption("Değişimler bir önceki dönemin ortalamasına göre hesaplanır.")
     cards = st.columns(5)
 
     with cards[0]:
@@ -1326,11 +1370,7 @@ elif page == "\U0001F3AF Forecast Center":
     )
 
     with tab_blocks:
-        blocks = load_csv(PROJECT_ROOT / "data/predictions/copper_production_blocks_latest.csv")
-        if not blocks.empty and "generated_at" in blocks:
-            issued = pd.to_datetime(blocks["generated_at"], utc=True, errors="coerce")
-            active_issue = pd.to_datetime(forecast_df["generated_at"].iloc[0], utc=True)
-            blocks = blocks.loc[issued.eq(active_issue)].sort_values("period_start")
+        blocks = active_period_forecast(forecast_df)
         if blocks.empty:
             st.info("Bu tahmin için 10 günlük dönem verisi bulunamadı.")
         else:
