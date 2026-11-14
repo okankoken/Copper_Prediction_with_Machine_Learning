@@ -1,0 +1,34 @@
+{
+  "status": "EXPERIMENTAL_NOT_PRODUCTION",
+  "generated_at_utc": "2026-11-14T16:03:10.605653+00:00",
+  "decision_date": "2026-11-14",
+  "price_asof": "2026-11-13",
+  "historical_price_reporting_delay_days": 1,
+  "headline_records": 36633,
+  "first_headline": "2009-08-04 00:00:00",
+  "last_headline": "2026-11-14 10:59:00",
+  "base_predictors": 1368,
+  "news_predictors": 360,
+  "selected_on_2025": "news_pls_5y",
+  "best_news_candidate_on_2025": "news_pls_5y",
+  "source_counts": {
+    "mining_company": 22365,
+    "peru_local": 8172,
+    "mining_com": 3578,
+    "chile_local": 2518
+  },
+  "archive_sha256": "c9c67a98ad86fb03d24715dcd775f717fa23ceb8724facd9f1bc86ced8e2c5ac",
+  "experiment_code_sha256": "995b01831c9e5f627fa6d320a306507eeec024bb232043ab4d023d78a7150f03",
+  "validation": "Purged chronological labels; 2025 model selection; 2026 test; news availability publication day + one UTC day",
+  "production_changed": false,
+  "airflow_changed": false,
+  "limitations": [
+    "Incomplete archive and changing source coverage; counts mean observed sample only",
+    "Original publication times and revisions not independently verified",
+    "Sentiment is general financial tone, not copper price sentiment",
+    "Spanish model uses machine-translated financial sentences, not validated local annotations",
+    "Correlation/FDR nominal p-values do not account fully for time-series dependence",
+    "Model comparisons are exploratory; previous model development used this period",
+    "First block includes observed days and nowcasts unreported days; weekday weights omit verified LME holidays"
+  ]
+}

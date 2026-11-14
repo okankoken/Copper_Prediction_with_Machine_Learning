@@ -732,6 +732,8 @@ page = st.sidebar.radio(
         "\U0001F3AF Forecast Center",
         "\U0001F310 Market Data Explorer",
         "\U0001F9ED Lead-Lag Signals",
+        "Haber ve Gecikme Araştırması",
+        "Veri Envanteri",
     ],
 )
 
@@ -1277,7 +1279,7 @@ elif page == "\U0001F3AF Forecast Center":
             <div class="hero-kicker">PRODUCTION FORECAST</div>
             <div class="hero-title">Forecast Center</div>
             <div class="hero-copy">
-                Inspect the H1-H12 production curve, final reconciled
+                Inspect the H1-H12 production curve, final monthly
                 forecasts, model diagnostics and backtest quality.
             </div>
         </div>
@@ -1585,3 +1587,11 @@ elif page == "\U0001F9ED Lead-Lag Signals":
     render_lead_lag_signal_lab(
         master_df=master_df,
     )
+
+elif page == "Haber ve Gecikme Araştırması":
+    from components.news_research import render_news_research
+    render_news_research(PROJECT_ROOT)
+
+elif page == "Veri Envanteri":
+    from components.data_inventory import render_data_inventory
+    render_data_inventory(PROJECT_ROOT, master_df)
