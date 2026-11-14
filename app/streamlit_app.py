@@ -1025,6 +1025,16 @@ if page == "\U0001F3E0 Executive Overview":
             hovertemplate="%{text}<br>Ortalama: %{y:,.2f} USD/ton<extra></extra>",
         ))
 
+        if not periods.empty:
+            fig.add_trace(go.Scatter(
+                x=forecast_df["forecast_date"],
+                y=forecast_df["final_forecast_price_usd_per_ton"],
+                mode="markers",
+                name="Aylık Tahmin Ortalaması",
+                marker=dict(symbol="diamond", size=9, color="#7c3aed"),
+                hovertemplate="%{x|%b %Y}<br>Aylık ortalama: %{y:,.2f} USD/ton<extra></extra>",
+            ))
+
         fig.add_vline(
             x=forecast_df[
                 "forecast_origin"
