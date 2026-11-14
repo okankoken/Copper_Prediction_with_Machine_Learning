@@ -518,7 +518,6 @@ st.markdown(
 )
 
 
-@st.cache_data(show_spinner=False)
 def load_csv(
     path: Path,
 ) -> pd.DataFrame:
