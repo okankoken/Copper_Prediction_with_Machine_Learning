@@ -865,41 +865,6 @@ def active_period_forecast(forecast: pd.DataFrame) -> pd.DataFrame:
 
 
 if page == "\U0001F3E0 Executive Overview":
-    periods = active_period_forecast(forecast_df)
-    if not periods.empty:
-        st.subheader("10 Günlük Bakır Görünümü")
-        prices = periods["price_usd_per_ton"]
-        periods["change"] = prices.diff()
-        periods["percent"] = prices.pct_change() * 100
-        periods["status"] = np.select(
-            [periods["observed_days"].eq(periods["trading_days"]), periods["observed_days"].gt(0)],
-            ["Gerçekleşen", "Kısmi tahmin"], default="Tahmin",
-        )
-        chart = go.Figure(go.Scatter(
-            x=periods["period_start"], y=prices, mode="lines+markers",
-            line=dict(color="#b45309", width=3),
-            marker=dict(color=periods["status"].map({
-                "Gerçekleşen": "#475569", "Kısmi tahmin": "#a16207", "Tahmin": "#b45309",
-            }), size=8),
-            customdata=periods[["period_end", "status"]],
-            hovertemplate="%{x|%d.%m.%Y} – %{customdata[0]}<br>%{y:,.2f} USD/ton"
-                          "<br>%{customdata[1]}<extra></extra>",
-        ))
-        chart.update_layout(height=320, yaxis_title="USD/ton", margin=dict(l=20, r=20, t=15, b=20))
-        chart.update_xaxes(type="date")
-        st.plotly_chart(chart, use_container_width=True, config=PLOTLY_CONFIG)
-        columns = st.columns(2)
-        for column, direction, moves in (
-            (columns[0], "↑ En büyük yükselişler", periods[periods["change"].gt(0)].nlargest(3, "change")),
-            (columns[1], "↓ En büyük düşüşler", periods[periods["change"].lt(0)].nsmallest(3, "change")),
-        ):
-            column.markdown(f"**{direction}**")
-            for move in moves.itertuples():
-                start = pd.Timestamp(move.period_start).strftime("%d.%m.%Y")
-                end = pd.Timestamp(move.period_end).strftime("%d.%m.%Y")
-                column.metric(f"{start} – {end} · {move.status}", f"{move.price_usd_per_ton:,.2f} USD/ton",
-                              f"{move.change:+,.2f} USD/ton ({move.percent:+.2f}%)")
-        st.caption("Değişimler bir önceki dönemin ortalamasına göre hesaplanır.")
     cards = st.columns(5)
 
     with cards[0]:
@@ -1028,90 +993,37 @@ if page == "\U0001F3E0 Executive Overview":
                 )
             )
 
-        forecast_chart = forecast_df[
-            [
-                "forecast_date",
-                "final_forecast_price_usd_per_ton",
-                "horizon",
-                "production_expert",
-                "confidence_flag",
+        periods = active_period_forecast(forecast_df)
+        if periods.empty:
+            forecast_dates = forecast_df["forecast_date"].tolist()
+            forecast_prices = forecast_df["final_forecast_price_usd_per_ton"].tolist()
+            labels = [pd.Timestamp(date).strftime("%b %Y") for date in forecast_dates]
+            trace_name = "Production Forecast"
+        else:
+            forecast_dates = pd.to_datetime(periods["period_end"]).tolist()
+            forecast_prices = periods["price_usd_per_ton"].tolist()
+            labels = [
+                f"{pd.Timestamp(row.period_start):%d.%m.%Y} – {pd.Timestamp(row.period_end):%d.%m.%Y}"
+                for row in periods.itertuples()
             ]
-        ].copy()
+            trace_name = "10 Günlük Üretim Tahmini"
 
-        origin_point = pd.DataFrame(
-            {
-                "forecast_date": [
-                    forecast_df[
-                        "forecast_origin"
-                    ].iloc[0]
-                ],
-                "final_forecast_price_usd_per_ton": [
-                    origin_price
-                ],
-                "horizon": [0],
-                "production_expert": [
-                    "Forecast Origin"
-                ],
-                "confidence_flag": [
-                    "ORIGIN"
-                ],
-            }
-        )
-
-        forecast_chart = pd.concat(
-            [
-                origin_point,
-                forecast_chart,
-            ],
-            ignore_index=True,
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=forecast_chart[
-                    "forecast_date"
-                ],
-                y=forecast_chart[
-                    "final_forecast_price_usd_per_ton"
-                ],
-                mode="lines+markers",
-                name="Production Forecast",
-                line=dict(
-                    width=3,
-                    dash="dash",
-                    color="#f59e0b",
-                ),
-                marker=dict(
-                    size=8,
-                    color="#f59e0b",
-                ),
-                customdata=np.column_stack(
-                    [
-                        forecast_chart[
-                            "horizon"
-                        ],
-                        forecast_chart[
-                            "production_expert"
-                        ],
-                        forecast_chart[
-                            "confidence_flag"
-                        ],
-                    ]
-                ),
-                hovertemplate=(
-                    "<b>%{x|%b %Y}</b>"
-                    "<br>"
-                    "Price: $%{y:,.2f}/t"
-                    "<br>"
-                    "Horizon: H%{customdata[0]}"
-                    "<br>"
-                    "Expert: %{customdata[1]}"
-                    "<br>"
-                    "Confidence: %{customdata[2]}"
-                    "<extra></extra>"
-                ),
-            )
-        )
+        changes = pd.Series([origin_price, *forecast_prices]).diff().iloc[1:]
+        percentages = pd.Series([origin_price, *forecast_prices]).pct_change().iloc[1:] * 100
+        hover = ["Tahmin başlangıcı", *[
+            f"{label}<br>Değişim: {change:+,.2f} USD/ton ({percent:+.2f}%)"
+            for label, change, percent in zip(labels, changes, percentages)
+        ]]
+        fig.add_trace(go.Scatter(
+            x=[forecast_df["forecast_origin"].iloc[0], *forecast_dates],
+            y=[origin_price, *forecast_prices],
+            mode="lines+markers",
+            name=trace_name,
+            line=dict(width=3, dash="dash", color="#f59e0b"),
+            marker=dict(size=6, color="#f59e0b"),
+            text=hover,
+            hovertemplate="%{text}<br>Ortalama: %{y:,.2f} USD/ton<extra></extra>",
+        ))
 
         fig.add_vline(
             x=forecast_df[
