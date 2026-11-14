@@ -689,9 +689,9 @@ def configure_top_legend(
     fig.update_layout(
         legend=dict(
             orientation="h",
-            x=1,
-            y=1.16,
-            xanchor="right",
+            x=0,
+            y=1.13,
+            xanchor="left",
             yanchor="bottom",
             itemclick="toggle",
             itemdoubleclick="toggleothers",
