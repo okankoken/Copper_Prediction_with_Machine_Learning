@@ -1316,13 +1316,32 @@ elif page == "\U0001F3AF Forecast Center":
         f"{len(forecast_df)}",
     )
 
-    tab_curve, tab_table, tab_diag = st.tabs(
+    tab_curve, tab_table, tab_blocks, tab_diag = st.tabs(
         [
             "Price Curve",
             "Forecast Table",
+            "10 Günlük Tahmin",
             "Model Diagnostics",
         ]
     )
+
+    with tab_blocks:
+        blocks = load_csv(PROJECT_ROOT / "data/predictions/copper_production_blocks_latest.csv")
+        if not blocks.empty and "generated_at" in blocks:
+            issued = pd.to_datetime(blocks["generated_at"], utc=True, errors="coerce")
+            active_issue = pd.to_datetime(forecast_df["generated_at"].iloc[0], utc=True)
+            blocks = blocks.loc[issued.eq(active_issue)].sort_values("period_start")
+        if blocks.empty:
+            st.info("Bu tahmin için 10 günlük dönem verisi bulunamadı.")
+        else:
+            st.caption("Her ay için 1–10, 11–20 ve 21–ay sonu ortalamaları")
+            period_table = blocks[["period_start", "period_end", "price_usd_per_ton",
+                                   "trading_days", "observed_days"]].rename(columns={
+                "period_start": "Başlangıç", "period_end": "Bitiş",
+                "price_usd_per_ton": "Ortalama (USD/ton)",
+                "trading_days": "İşlem günü", "observed_days": "Gerçekleşen gün",
+            })
+            st.dataframe(period_table.round(2), hide_index=True)
 
     with tab_curve:
         fig = go.Figure()
